@@ -684,7 +684,11 @@ fn cmd_raw(a: RawArgs) -> Result<(), String> {
 fn main() -> ExitCode {
     let cli = Cli::parse();
     let res = match cli.cmd {
-        None => gui::run(gui::GuiArgs {
+        None => {
+            // doble clic en Windows: fuera la ventana de consola
+            #[cfg(windows)]
+            winhid::ocultar_consola();
+            gui::run(gui::GuiArgs {
             profile: None,
             dev: DeviceArgs {
                 device: None,
@@ -692,12 +696,16 @@ fn main() -> ExitCode {
                 protocol: None,
                 transport: "auto".to_string(),
                 dry_run: false,
-            },
-        }),
-        Some(Cmd::Gui(a)) => gui::run(gui::GuiArgs {
-            profile: a.profile,
-            dev: a.dev,
-        }),
+            })
+        }
+        Some(Cmd::Gui(a)) => {
+            #[cfg(windows)]
+            winhid::ocultar_consola();
+            gui::run(gui::GuiArgs {
+                profile: a.profile,
+                dev: a.dev,
+            })
+        }
         Some(Cmd::List) => cmd_list(),
         Some(Cmd::Info(a)) => cmd_info(a),
         Some(Cmd::Probe(a)) => cmd_probe(a),

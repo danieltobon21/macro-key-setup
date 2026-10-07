@@ -30,6 +30,9 @@ windows-sys = { version = "0.59", features = [
     # CreateFileW/WriteFile arrastran estos dos modulos en su firma
     "Win32_Security",
     "Win32_System_IO",
+    # ocultar la ventana de consola cuando se abre la GUI con doble clic
+    "Win32_System_Console",
+    "Win32_UI_WindowsAndMessaging",
 ] }
 
 # Sólo en Windows: incrusta el icono en el .exe (necesita rc.exe o windres)

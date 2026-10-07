@@ -23,6 +23,8 @@ use windows_sys::Win32::Devices::DeviceAndDriverInstallation::{
 };
 use windows_sys::Win32::Devices::HumanInterfaceDevice::{HidD_GetHidGuid, HidD_GetProductString, HidD_GetPreparsedData, HidD_FreePreparsedData, HidP_GetCaps, HIDP_CAPS};
 use windows_sys::Win32::Foundation::{CloseHandle, GENERIC_READ, GENERIC_WRITE, HANDLE, INVALID_HANDLE_VALUE};
+use windows_sys::Win32::System::Console::GetConsoleWindow;
+use windows_sys::Win32::UI::WindowsAndMessaging::{ShowWindow, SW_HIDE};
 use windows_sys::Win32::Storage::FileSystem::{
     CreateFileW, WriteFile, FILE_ATTRIBUTE_NORMAL, FILE_SHARE_READ, FILE_SHARE_WRITE,
     OPEN_EXISTING,
@@ -267,6 +269,20 @@ impl Drop for Salida {
     fn drop(&mut self) {
         unsafe {
             CloseHandle(self.handle);
+        }
+    }
+}
+
+/// Oculta la ventana de consola que Windows crea al abrir un .exe de consola.
+///
+/// Se llama sólo cuando se va a mostrar la GUI (doble clic): así no aparece la
+/// ventana negra al lado de la ventana de la aplicación, y cuando se usa el CLI
+/// desde una consola la salida sigue viéndose con normalidad.
+pub fn ocultar_consola() {
+    unsafe {
+        let h = GetConsoleWindow();
+        if !h.is_null() {
+            ShowWindow(h, SW_HIDE);
         }
     }
 }

@@ -121,7 +121,8 @@ impl Device {
         })
     }
 
-    fn from_sysfs(vid: u16, node: &str) -> Option<Device> {
+    #[cfg(unix)]
+fn from_sysfs(vid: u16, node: &str) -> Option<Device> {
         let sysdir = Path::new("/sys/class/hidraw").join(node);
         // sysdir/device es un enlace simbólico: hay que resolverlo antes de subir
         // por el árbol real del dispositivo USB.
@@ -267,10 +268,12 @@ impl Device {
     }
 }
 
+#[cfg(unix)]
 fn read_trim(p: PathBuf) -> String {
     fs::read_to_string(p).unwrap_or_default().trim().to_string()
 }
 
+#[cfg(unix)]
 fn read_hex(p: PathBuf) -> io::Result<u16> {
     let s = fs::read_to_string(p)?;
     u16::from_str_radix(s.trim().trim_start_matches("0x"), 16)
