@@ -4,9 +4,12 @@
 //! Protocolo reconstruido por ingeniería inversa: ver `docs/PROTOCOL.md`.
 //! Sin dependencias C: habla con /dev/hidraw y lee el descriptor por sysfs.
 
+mod gui;
 mod hidraw;
 mod protocol;
 mod usbfs;
+#[cfg(windows)]
+mod winhid;
 
 use clap::{Args, Parser, Subcommand};
 use hidraw::{Device, ReportKind, VID_OEM};
@@ -22,8 +25,18 @@ use usbfs::UsbfsConfig;
     long_about = None,
 )]
 struct Cli {
+    /// sin argumentos abre la interfaz gráfica (así funciona el doble clic en Windows)
     #[command(subcommand)]
-    cmd: Cmd,
+    cmd: Option<Cmd>,
+}
+
+#[derive(Args, Debug)]
+struct GuiArgsCli {
+    /// perfil TOML que se carga al abrir la ventana
+    #[arg(long)]
+    profile: Option<String>,
+    #[command(flatten)]
+    dev: DeviceArgs,
 }
 
 #[derive(Args, Debug, Clone)]
@@ -62,6 +75,8 @@ enum Cmd {
     Apply(ApplyArgs),
     /// Envía bytes crudos al aparato (depuración)
     Raw(RawArgs),
+    /// Abre la interfaz gráfica (por defecto si no se indica nada)
+    Gui(GuiArgsCli),
 }
 
 #[derive(Args, Debug)]
@@ -141,12 +156,19 @@ struct Target {
 enum Transport {
     Hidraw(Device),
     Usbfs(UsbfsConfig),
+    /// Windows: API HID nativa. `None` = sólo dry-run (no hay aparato abierto).
+    #[cfg(windows)]
+    WinHid(Option<winhid::Salida>),
 }
 
 impl Target {
     fn where_(&self) -> String {
         match &self.transport {
             Transport::Hidraw(d) => d.path.display().to_string(),
+            #[cfg(windows)]
+            Transport::WinHid(Some(d)) => format!("{} (colección HID)", d.path().display()),
+            #[cfg(windows)]
+            Transport::WinHid(None) => "(sin aparato: dry-run)".to_string(),
             Transport::Usbfs(c) => format!(
                 "{} (interfaz {}, EP 0x{:02x}, transferencias de {} B)",
                 c.path.display(),
@@ -161,6 +183,8 @@ impl Target {
         match self.transport {
             Transport::Hidraw(_) => "hidraw",
             Transport::Usbfs(_) => "usbfs",
+            #[cfg(windows)]
+            Transport::WinHid(_) => "hidapi",
         }
     }
 }
@@ -189,7 +213,24 @@ fn target(da: &DeviceArgs, need_device: bool) -> Result<Target, String> {
         None
     };
 
+    // --- Windows: la API HID es la única vía (no hay /dev/hidraw ni usbfs) ---
+    #[cfg(windows)]
+    let transport = {
+        let elegido = devs.iter().find(|d| d.interface == Some(cfg_iface));
+        match elegido {
+            Some(d) => Transport::WinHid(Some(winhid::Salida::abrir(&d.path.to_string_lossy())?)),
+            None if da.dry_run => Transport::WinHid(None),
+            None => {
+                return Err(format!(
+                    "no encuentro la interfaz de configuración HID (VID 0x{VID_OEM:04x}, mi_{cfg_iface:02x}). \
+                     Conecta el teclado y comprueba en el Administrador de dispositivos."
+                ))
+            }
+        }
+    };
+
     // 1) nodo hidraw indicado a mano
+    #[cfg(not(windows))]
     let transport = if let Some(p) = &da.device {
         Transport::Hidraw(Device::by_path(VID_OEM, p).map_err(|e| e.to_string())?)
     } else if da.transport != "usbfs" {
@@ -257,6 +298,10 @@ fn target(da: &DeviceArgs, need_device: bool) -> Result<Target, String> {
             (d.numbered_reports(), len)
         }
         Transport::Usbfs(c) => (false, c.transfer_len),
+        #[cfg(windows)]
+        Transport::WinHid(Some(d)) => (true, d.out_len),
+        #[cfg(windows)]
+        Transport::WinHid(None) => (true, SHORT_FRAME_LEN + 1),
     };
 
     // Igual que el original (KeyBoardVersion_Check): si no nos fuerzan un report id,
@@ -293,6 +338,10 @@ impl Target {
             Transport::Hidraw(dev) => {
                 dev.write_report(self.numbered, self.report_id, data, self.out_len)
             }
+            #[cfg(windows)]
+            Transport::WinHid(Some(dev)) => dev.escribir(self.report_id, data),
+            #[cfg(windows)]
+            Transport::WinHid(None) => Err("no hay aparato abierto (dry-run)".into()),
             Transport::Usbfs(cfg) => {
                 if !cfg.is_open() {
                     cfg.open()
@@ -602,14 +651,28 @@ fn cmd_raw(a: RawArgs) -> Result<(), String> {
 fn main() -> ExitCode {
     let cli = Cli::parse();
     let res = match cli.cmd {
-        Cmd::List => cmd_list(),
-        Cmd::Info(a) => cmd_info(a),
-        Cmd::Probe(a) => cmd_probe(a),
-        Cmd::Key(a) => cmd_key(a),
-        Cmd::Led(a) => cmd_led(a),
-        Cmd::Commit(a) => cmd_commit(a),
-        Cmd::Apply(a) => cmd_apply(a),
-        Cmd::Raw(a) => cmd_raw(a),
+        None => gui::run(gui::GuiArgs {
+            profile: None,
+            dev: DeviceArgs {
+                device: None,
+                report_id: None,
+                protocol: None,
+                transport: "auto".to_string(),
+                dry_run: false,
+            },
+        }),
+        Some(Cmd::Gui(a)) => gui::run(gui::GuiArgs {
+            profile: a.profile,
+            dev: a.dev,
+        }),
+        Some(Cmd::List) => cmd_list(),
+        Some(Cmd::Info(a)) => cmd_info(a),
+        Some(Cmd::Probe(a)) => cmd_probe(a),
+        Some(Cmd::Key(a)) => cmd_key(a),
+        Some(Cmd::Led(a)) => cmd_led(a),
+        Some(Cmd::Commit(a)) => cmd_commit(a),
+        Some(Cmd::Apply(a)) => cmd_apply(a),
+        Some(Cmd::Raw(a)) => cmd_raw(a),
     };
     match res {
         Ok(()) => ExitCode::SUCCESS,

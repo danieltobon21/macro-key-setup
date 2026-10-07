@@ -48,6 +48,25 @@ pub struct Device {
 
 impl Device {
     /// Todas las interfaces HID del aparato (puede haber varias).
+    /// En Windows no hay sysfs: la enumeración la hace la API HID (SetupAPI).
+    #[cfg(windows)]
+    pub fn discover(vid: u16) -> io::Result<Vec<Device>> {
+        Ok(crate::winhid::enumerar(vid)
+            .into_iter()
+            .map(|i| Device {
+                node: i.path.clone(),
+                path: std::path::PathBuf::from(&i.path),
+                vid: i.vid,
+                pid: i.pid,
+                interface: Some(i.interface),
+                product: i.product,
+                serial: String::new(),
+                manufacturer: String::new(),
+            })
+            .collect())
+    }
+
+    #[cfg(not(windows))]
     pub fn discover(vid: u16) -> io::Result<Vec<Device>> {
         let mut out = Vec::new();
         let mut names: Vec<_> = fs::read_dir("/sys/class/hidraw")?
@@ -64,6 +83,31 @@ impl Device {
         Ok(out)
     }
 
+    /// En Windows la ruta es la de la colección HID; se busca entre las enumeradas.
+    #[cfg(windows)]
+    pub fn by_path(_vid: u16, path: &str) -> io::Result<Device> {
+        let buscado = path.to_ascii_lowercase();
+        for i in crate::winhid::enumerar(0) {
+            if i.path.to_ascii_lowercase() == buscado || i.path.to_ascii_lowercase().ends_with(&buscado) {
+                return Ok(Device {
+                    node: i.path.clone(),
+                    path: std::path::PathBuf::from(&i.path),
+                    vid: i.vid,
+                    pid: i.pid,
+                    interface: Some(i.interface),
+                    product: i.product,
+                    serial: String::new(),
+                    manufacturer: String::new(),
+                });
+            }
+        }
+        Err(io::Error::new(
+            io::ErrorKind::NotFound,
+            format!("{path}: no encuentro esa colección HID"),
+        ))
+    }
+
+    #[cfg(not(windows))]
     pub fn by_path(vid: u16, path: &str) -> io::Result<Device> {
         let node = Path::new(path)
             .file_name()

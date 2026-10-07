@@ -9,10 +9,31 @@ license = "MIT"
 clap = { version = "4", features = ["derive"] }
 serde = { version = "1", features = ["derive"] }
 toml = "0.8"
+eframe = { version = "0.36", default-features = false, features = [
+    "glow",
+    "default_fonts",
+    "wayland",
+    "x11",
+] }
+
+# Linux: libc para los ioctl de USBDEVFS (transporte usbfs)
+[target.'cfg(unix)'.dependencies]
 libc = "0.2"
+
+# Windows: API HID nativa (no hay /dev/hidraw ni usbfs)
+[target.'cfg(windows)'.dependencies]
+windows-sys = { version = "0.59", features = [
+    "Win32_Foundation",
+    "Win32_Devices_DeviceAndDriverInstallation",
+    "Win32_Devices_HumanInterfaceDevice",
+    "Win32_Storage_FileSystem",
+] }
+
+# Sólo en Windows: incrusta el icono en el .exe (necesita rc.exe o windres)
+[target.'cfg(windows)'.build-dependencies]
+winres = "0.1"
 
 [profile.release]
 opt-level = "z"
 lto = true
 strip = true
-panic = "abort"
