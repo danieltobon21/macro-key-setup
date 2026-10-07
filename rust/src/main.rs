@@ -689,13 +689,14 @@ fn main() -> ExitCode {
             #[cfg(windows)]
             winhid::ocultar_consola();
             gui::run(gui::GuiArgs {
-            profile: None,
-            dev: DeviceArgs {
-                device: None,
-                report_id: None,
-                protocol: None,
-                transport: "auto".to_string(),
-                dry_run: false,
+                profile: None,
+                dev: DeviceArgs {
+                    device: None,
+                    report_id: None,
+                    protocol: None,
+                    transport: "auto".to_string(),
+                    dry_run: false,
+                },
             })
         }
         Some(Cmd::Gui(a)) => {
