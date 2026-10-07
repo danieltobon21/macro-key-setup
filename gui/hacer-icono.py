@@ -25,6 +25,7 @@ TECLA_A = (110, 110, 126, 255)
 ANILLO = (150, 156, 168, 255)
 PERILLA = (24, 24, 29, 255)
 BLANCO = (246, 248, 251, 255)
+NARANJA = (255, 122, 26, 255)   # acento de la identidad (negro + naranja)
 
 
 def _cuerpo(d, x0, y0, x1, y1, radio, borde, placa):
@@ -55,7 +56,7 @@ def _perilla(d, cx, cy, r, dientes, ancho_diente, ancho_indicador):
                fill=(104, 108, 120, 255), width=ancho_diente)
     d.ellipse([cx - r + 90, cy - r + 90, cx + r - 90, cy + r - 90],
               fill=(32, 32, 38, 255), outline=(74, 78, 90, 255), width=6)
-    d.line([cx, cy - r + 44, cx, cy - 62], fill=BLANCO, width=ancho_indicador)
+    d.line([cx, cy - r + 44, cx, cy - 62], fill=NARANJA, width=ancho_indicador)
 
 
 def detallado():
@@ -118,9 +119,9 @@ def mini():
             b = y0 + 62 + fila * (kh + gy)
             d.rounded_rectangle([a, b, a + kw, b + kh], radius=40, fill=(226, 230, 238, 255))
     cx, cy, r = x0 + 62 + 3 * kw + 2 * gx + 190, (y0 + y1) // 2, 196
-    d.ellipse([cx - r, cy - r, cx + r, cy + r], fill=(226, 230, 238, 255))
+    d.ellipse([cx - r, cy - r, cx + r, cy + r], fill=NARANJA)
     d.ellipse([cx - 96, cy - 96, cx + 96, cy + 96], fill=(20, 20, 25, 255))
-    d.line([cx, cy - r + 30, cx, cy - 70], fill=(226, 230, 238, 255), width=46)
+    d.line([cx, cy - r + 30, cx, cy - 70], fill=NARANJA, width=46)
     return img
 
 
