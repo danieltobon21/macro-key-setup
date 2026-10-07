@@ -4,9 +4,9 @@
 <meta charset="utf-8">
 <style>
   /* ---------- chrome del panel (respeta el tema de la app) ---------- */
-  .mk { --naranja: #ff7a1a; --naranja-osc: #d95e00; --ambar: #f2b134;
-        --negro: #0b0b0d; --panel: #14161a; --panel2: #1c1f24; --borde: #2e3138;
-        --gris: #6e7683; --gris-claro: #a8b0bc; --blanco: #f2f4f8;
+  .mk { --naranja: #ff5a1f; --naranja-osc: #e04a12;
+        --negro: #181a1f; --panel: #1c1f26; --panel2: #23262e; --borde: #343a45;
+        --gris: #9aa2b1; --gris-claro: #9aa2b1; --blanco: #eceef2;
         width: 1004px; color: var(--blanco); font-size: 13px; line-height: 1.35; }
   .mk h1 { font-size: 15px; font-weight: 600; margin: 0 0 2px; }
   .mk .sub { color: var(--gris-claro); font-size: 12px; margin-bottom: 10px; }
@@ -32,7 +32,7 @@
                cursor: pointer; display: flex; flex-direction: column; justify-content: space-between;
                padding: 7px 9px; box-sizing: border-box; transition: .12s; }
   .mk .tecla:hover { border-color: #7f8794; }
-  .mk .tecla.sel { border-color: var(--naranja); box-shadow: 0 0 0 2px rgba(255,122,26,.45), 0 0 18px rgba(255,122,26,.35); }
+  .mk .tecla.sel { border-color: var(--naranja); box-shadow: 0 0 0 2px rgba(255,90,31,.45), 0 0 18px rgba(255,90,31,.35); }
   .mk .num { color: #a7aebb; font-size: 11px; font-weight: 700; letter-spacing: .4px; }
   .mk .accion { color: #eef1f6; font-size: 13px; font-weight: 600; text-align: center; }
   .mk .accion small { display: block; font-weight: 400; font-size: 10.5px; color: #c2c9d5; }
@@ -61,11 +61,11 @@
   .mk .seg span.on { background: var(--naranja); border-color: var(--naranja); color: #140a02; font-weight: 700; }
   .mk .chips { display: flex; gap: 5px; flex-wrap: wrap; }
   .mk .chip { border: 1px solid var(--borde); border-radius: 999px; padding: 3px 10px; font-size: 12px; cursor: pointer; }
-  .mk .chip.on { background: rgba(255,122,26,.20); border-color: var(--naranja); font-weight: 700; }
+  .mk .chip.on { background: rgba(255,90,31,.20); border-color: var(--naranja); font-weight: 700; }
   .mk select { width: 100%; background: var(--panel2); color: var(--blanco); border: 1px solid var(--borde);
                border-radius: 7px; padding: 5px 7px; font: inherit; }
-  .mk .resumen { font-family: ui-monospace, monospace; font-size: 12px; background: rgba(255,122,26,.08);
-                 border: 1px dashed rgba(255,122,26,.45); border-radius: 8px; padding: 7px 9px; color: var(--blanco); }
+  .mk .resumen { font-family: ui-monospace, monospace; font-size: 12px; background: rgba(255,90,31,.08);
+                 border: 1px dashed rgba(255,90,31,.45); border-radius: 8px; padding: 7px 9px; color: var(--blanco); }
   .mk .nota { color: var(--gris-claro); font-size: 11px; margin-top: 8px; }
   .mk .tira { display: flex; gap: 10px; margin-top: 12px; align-items: center; flex-wrap: wrap; }
   .mk .acento { width: 26px; height: 26px; border-radius: 7px; border: 1px solid var(--borde); cursor: pointer; }
@@ -153,10 +153,9 @@
 
   <div class="tira">
     <span style="color:var(--gris-claro);font-size:11.5px">Paleta:</span>
-    <span class="muestra" style="background:#ff7a1a"></span><span class="nom">naranja primario #ff7a1a</span>
-    <span class="muestra" style="background:#f2b134"></span><span class="nom">ámbar secundario #f2b134</span>
-    <span class="muestra" style="background:#14161a;border-color:#2e3138"></span><span class="nom">negros y grises #0b0b0d · #14161a · #2e3138</span>
-    <span class="muestra" style="background:#f2f4f8"></span><span class="nom">blancos #f2f4f8 · #a8b0bc</span>
+    <span class="muestra" style="background:#ff5a1f"></span><span class="nom">naranja de acento #ff5a1f</span>
+    <span class="muestra" style="background:#181a1f;border-color:#2c313b"></span><span class="nom">grafito y grises #181a1f · #1c1f26 · #2c313b · #9aa2b1</span>
+    <span class="muestra" style="background:#f2f4f8"></span><span class="nom">claro #eceef2</span>
   </div>
   <div class="log">[17:14:32] aplicado: 9 asignaciones · 8 tramas + commits · verificado en el monitor</div>
 </div>
