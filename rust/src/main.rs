@@ -455,6 +455,7 @@ fn cmd_list() -> Result<(), String> {
         }
     }
     // Interfaz de configuración por USB directo (no aparece como /dev/hidraw).
+    #[cfg(unix)]
     for k in hidraw::KNOWN_PIDS {
         let iface = if k.1 == 0 { 1 } else { 0 };
         if let Some(c) = UsbfsConfig::find(VID_OEM, k.0, iface) {

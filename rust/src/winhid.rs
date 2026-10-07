@@ -247,7 +247,7 @@ impl Salida {
         unsafe {
             let ok = WriteFile(
                 self.handle,
-                buf.as_ptr() as *const c_void,
+                buf.as_ptr(),
                 buf.len() as u32,
                 &mut escritos,
                 std::ptr::null_mut(),
