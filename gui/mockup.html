@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<style>
+  /* ---------- chrome del panel (respeta el tema de la app) ---------- */
+  .mk { width: 1004px; color: var(--foreground); font-size: 13px; line-height: 1.35; }
+  .mk h1 { font-size: 15px; font-weight: 600; margin: 0 0 2px; }
+  .mk .sub { color: var(--muted-foreground); font-size: 12px; margin-bottom: 10px; }
+  .mk .barra { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; flex-wrap: wrap; }
+  .mk .btn { border: 1px solid var(--border); background: var(--card); color: var(--foreground);
+             border-radius: 7px; padding: 5px 11px; font: inherit; cursor: pointer; }
+  .mk .btn.primario { background: var(--accent); border-color: var(--accent); color: #08111f; font-weight: 600; }
+  .mk .estado { margin-left: auto; display: flex; align-items: center; gap: 6px;
+                color: var(--muted-foreground); font-size: 12px; }
+  .mk .punto { width: 8px; height: 8px; border-radius: 50%; background: #35d07f; box-shadow: 0 0 7px #35d07f; }
+  .mk .disp { display: flex; gap: 16px; align-items: flex-start; position: relative; }
+  /* ---------- el aparato, a escala 1:1 (1 mm = 6 px) ---------- */
+  .mk .aparato { position: relative; width: 600px; height: 360px; border-radius: 22px; flex: none;
+                 background: linear-gradient(160deg, #17181c 0%, #0b0b0e 60%, #08080a 100%);
+                 border: 1px solid #b9c0cc; box-shadow: 0 10px 26px rgba(0,0,0,.45), inset 0 1px 0 rgba(255,255,255,.07); }
+  .mk .placa { position: absolute; inset: 6px; border-radius: 17px; border: 1px solid #565b66;
+               background: linear-gradient(150deg, #14151a, #0d0e11 70%); }
+  .mk .tornillo { position: absolute; width: 9px; height: 9px; border-radius: 50%;
+                  background: radial-gradient(circle at 35% 30%, #dfe3ea, #8f959f); }
+  .mk .tecla { position: absolute; width: 108px; height: 102px; border-radius: 13px;
+               background: linear-gradient(180deg, #2c2d34 0%, #1c1d22 55%, #17181c 100%);
+               border: 1px solid #3b3d45; box-shadow: inset 0 1px 0 rgba(255,255,255,.10);
+               cursor: pointer; display: flex; flex-direction: column; justify-content: space-between;
+               padding: 7px 9px; box-sizing: border-box; transition: .12s; }
+  .mk .tecla:hover { border-color: #7f8794; }
+  .mk .tecla.sel { border-color: var(--accent); box-shadow: 0 0 0 2px color-mix(in srgb, var(--accent) 45%, transparent), 0 0 16px color-mix(in srgb, var(--accent) 30%, transparent); }
+  .mk .num { color: #a7aebb; font-size: 11px; font-weight: 700; letter-spacing: .4px; }
+  .mk .accion { color: #eef1f6; font-size: 13px; font-weight: 600; text-align: center; }
+  .mk .accion small { display: block; font-weight: 400; font-size: 10.5px; color: #c2c9d5; }
+  .mk .perilla { position: absolute; width: 120px; height: 120px; border-radius: 50%;
+                 background: radial-gradient(circle at 38% 32%, #35373f, #16171b 70%);
+                 border: 3px solid #7d8492; box-shadow: 0 6px 16px rgba(0,0,0,.5); }
+  .mk .dientes { position: absolute; inset: 7px; border-radius: 50%; border: 7px dotted #5b606c; }
+  .mk .linea { position: absolute; left: 50%; top: 9px; width: 7px; height: 34px; margin-left: -3.5px;
+               border-radius: 4px; background: #f2f5f9; }
+  .mk .zona { position: absolute; height: 26px; border-radius: 7px; border: 1px dashed #4a505c;
+              color: #b9c0cc; font-size: 10.5px; display: flex; align-items: center; justify-content: center;
+              cursor: pointer; background: rgba(255,255,255,.03); }
+  .mk .zona:hover { border-color: var(--accent); color: #fff; }
+  .mk .zona.redonda { width: 40px; height: 40px; border-radius: 50%; font-size: 13px;
+                flex-direction: column; line-height: 1; }
+  .mk .zona.redonda small { font-size: 8.5px; color: #a7aebb; }
+  .mk .leyenda { color: #a7aebb; font-size: 10.5px; text-align: center; margin-top: 1px; }
+  .mk .medidas { position: absolute; bottom: 4px; left: 10px; color: #6d7482; font-size: 10px; }
+  /* ---------- editor ---------- */
+  .mk .editor { flex: 1; border: 1px solid var(--border); background: var(--card); border-radius: 12px; padding: 12px; }
+  .mk .editor h2 { font-size: 13px; margin: 0 0 8px; font-weight: 600; }
+  .mk .fila { margin-bottom: 9px; }
+  .mk .etq { color: var(--muted-foreground); font-size: 11px; margin-bottom: 4px; }
+  .mk .seg { display: flex; gap: 5px; }
+  .mk .seg span { border: 1px solid var(--border); border-radius: 7px; padding: 4px 9px; font-size: 12px; cursor: pointer; }
+  .mk .seg span.on { background: var(--accent); border-color: var(--accent); color: #08111f; font-weight: 600; }
+  .mk .chips { display: flex; gap: 5px; flex-wrap: wrap; }
+  .mk .chip { border: 1px solid var(--border); border-radius: 999px; padding: 3px 10px; font-size: 12px; cursor: pointer; }
+  .mk .chip.on { background: color-mix(in srgb, var(--accent) 22%, transparent); border-color: var(--accent); font-weight: 600; }
+  .mk select { width: 100%; background: var(--card); color: var(--foreground); border: 1px solid var(--border);
+               border-radius: 7px; padding: 5px 7px; font: inherit; }
+  .mk .resumen { font-family: ui-monospace, monospace; font-size: 12px; background: rgba(127,127,127,.10);
+                 border: 1px dashed var(--border); border-radius: 8px; padding: 7px 9px; color: var(--foreground); }
+  .mk .nota { color: var(--muted-foreground); font-size: 11px; margin-top: 8px; }
+  .mk .tira { display: flex; gap: 10px; margin-top: 12px; align-items: center; flex-wrap: wrap; }
+  .mk .acento { width: 26px; height: 26px; border-radius: 7px; border: 1px solid var(--border); cursor: pointer; }
+  .mk .log { margin-top: 10px; color: var(--muted-foreground); font-size: 11.5px; font-family: ui-monospace, monospace; }
+</style>
+</head>
+<body>
+<div class="mk">
+  <h1>macrokey — configurador del teclado macro</h1>
+  <div class="sub">Vista previa del diseño · el aparato está dibujado a escala real (100 × 60 mm, perilla ⌀ 20 mm, teclas de 18 × 17 mm)</div>
+
+  <div class="barra">
+    <button class="btn primario" data-hermes-send="Diseño aprobado: adelante con la GUI">Aplicar al teclado</button>
+    <button class="btn" data-hermes-send="Quiero que la GUI lea la configuración actual del teclado">Leer del teclado</button>
+    <button class="btn" data-hermes-send="Quiero perfiles (guardar/cargar) en la GUI">Guardar perfil</button>
+    <div class="estado"><span class="punto"></span> HID 1189:8890 · interfaz de configuración · conectado</div>
+  </div>
+
+  <div class="disp">
+    <!-- ================= aparato ================= -->
+    <div class="aparato">
+      <div class="placa"></div>
+      <div class="tornillo" style="left:9px;top:9px"></div>
+      <div class="tornillo" style="right:9px;top:9px"></div>
+      <div class="tornillo" style="left:9px;bottom:9px"></div>
+      <div class="tornillo" style="right:9px;bottom:9px"></div>
+
+      <!-- teclas: 2 filas x 3 columnas (18x17 mm) -->
+      <div class="tecla" style="left:24px;top:69px"  data-hermes-send="En el mockup pulsé la tecla 1 (Ctrl+C)"><span class="num">TECLA 1</span><span class="accion">Ctrl + C<small>copiar</small></span></div>
+      <div class="tecla" style="left:144px;top:69px" data-hermes-send="En el mockup pulsé la tecla 2 (Ctrl+V)"><span class="num">TECLA 2</span><span class="accion">Ctrl + V<small>pegar</small></span></div>
+      <div class="tecla" style="left:264px;top:69px" data-hermes-send="En el mockup pulsé la tecla 3 (Ctrl+X)"><span class="num">TECLA 3</span><span class="accion">Ctrl + X<small>cortar</small></span></div>
+      <div class="tecla" style="left:24px;top:189px"  data-hermes-send="En el mockup pulsé la tecla 4 (Escape)"><span class="num">TECLA 4</span><span class="accion">Escape<small>—</small></span></div>
+      <div class="tecla" style="left:144px;top:189px" data-hermes-send="En el mockup pulsé la tecla 5 (botón central)"><span class="num">TECLA 5</span><span class="accion">botón central<small>pan · mantener</small></span></div>
+      <div class="tecla sel" style="left:264px;top:189px" data-hermes-send="En el mockup pulsé la tecla 6 (botón derecho)"><span class="num">TECLA 6</span><span class="accion">botón derecho<small>rotate · mantener</small></span></div>
+
+      <!-- perilla + sus tres zonas -->
+      <div class="perilla" style="left:434px;top:120px">
+        <div class="dientes"></div>
+        <div class="linea"></div>
+      </div>
+      <div class="zona redonda" style="left:396px;top:163px"  data-hermes-send="En el mockup pulsé la perilla girando a la izquierda">◀<small>vol −</small></div>
+      <div class="zona redonda" style="left:558px;top:163px" data-hermes-send="En el mockup pulsé la perilla girando a la derecha">▶<small>vol +</small></div>
+      <div class="zona" style="left:434px;top:250px;width:120px" data-hermes-send="En el mockup pulsé el centro de la perilla">pulsar · play/pausa</div>
+    </div>
+
+    <div style="position:absolute;left:2px;top:370px;color:#a7aebb;font-size:11px">100 mm × 60 mm · perilla ⌀ 20 mm · teclas 18 × 17 mm</div>
+
+    <!-- ================= editor ================= -->
+    <div class="editor">
+      <h2>Tecla 6 seleccionada</h2>
+      <div class="fila">
+        <div class="etq">Tipo de acción</div>
+        <div class="seg">
+          <span data-hermes-send="En el diseño prefiero el tipo Teclado">Teclado</span>
+          <span class="on" data-hermes-send="En el diseño prefiero el tipo Ratón">Ratón</span>
+          <span data-hermes-send="En el diseño prefiero el tipo Multimedia">Multimedia</span>
+          <span data-hermes-send="Quiero secuencias (varias teclas seguidas) en el editor">Secuencia</span>
+        </div>
+      </div>
+      <div class="fila">
+        <div class="etq">Acción</div>
+        <select>
+          <option>Botón derecho (arrastrar = rotate)</option>
+          <option>Botón central (arrastrar = pan)</option>
+          <option>Botón izquierdo</option>
+          <option>Rueda arriba / abajo (zoom)</option>
+        </select>
+      </div>
+      <div class="fila">
+        <div class="etq">Modificadores (opcional, p. ej. Ctrl + rueda)</div>
+        <div class="chips">
+          <span class="chip">Ctrl</span><span class="chip">Shift</span><span class="chip">Alt</span><span class="chip">Win</span>
+        </div>
+      </div>
+      <div class="fila">
+        <div class="etq">Se enviará a la flash</div>
+        <div class="resumen">06 13 02 00 00 00 00 00 &nbsp;+&nbsp; commit AA AA</div>
+      </div>
+      <button class="btn primario" data-hermes-send="Diseño aprobado: adelante con la GUI">Aplicar a la tecla 6</button>
+      <div class="nota">Cada tecla muestra su función en pantalla (las teclas físicas vienen en negro, sin leyenda). El editor cambia según el tipo: teclado (código + modificadores), ratón (botón/rueda + modificadores), multimedia (play, volumen, mute…) o secuencia (varias teclas con retardo).</div>
+    </div>
+  </div>
+
+  <div class="tira">
+    <span style="color:var(--muted-foreground);font-size:11.5px">Color de acento (elige uno):</span>
+    <span class="acento" style="background:#5aa9ff;box-shadow:0 0 0 2px #0d0f13 inset, 0 0 0 4px #5aa9ff" data-hermes-send="Para el acento prefiero el azul (#5aa9ff)"></span>
+    <span class="acento" style="background:#f2b134" data-hermes-send="Para el acento prefiero el ámbar (#f2b134)"></span>
+    <span class="acento" style="background:#35d07f" data-hermes-send="Para el acento prefiero el verde (#35d07f)"></span>
+    <span class="acento" style="background:#c9ced6" data-hermes-send="Para el acento prefiero la plata (#c9ced6)"></span>
+    <span style="color:var(--muted-foreground);font-size:11.5px">· cuerpo negro brillante y línea plateada, como la foto</span>
+  </div>
+  <div class="log">[17:14:32] aplicado: 9 asignaciones · 8 tramas + commits · verificado en el monitor</div>
+</div>
+</body>
+</html>
