@@ -1,0 +1,161 @@
+
+## BasicKeys
+- ) 0                      KEY_Char_Num[=0]=39
+- ! 1                      KEY_Char_Num[=0]=30
+- @ 2                      KEY_Char_Num[=0]=31
+- # 3                      KEY_Char_Num[=0]=32
+- $ 4                      KEY_Char_Num[=0]=33
+- % 5                      KEY_Char_Num[=0]=34
+- ^ 6                      KEY_Char_Num[=0]=35
+- ＆ 7                      KEY_Char_Num[=0]=36
+- * 8                      KEY_Char_Num[=0]=37
+- ( 9                      KEY_Char_Num[=0]=38
+- A                        KEY_Char_Num[=0]=4
+- ＋=                       KEY_Char_Num[=0]=46
+- B                        KEY_Char_Num[=0]=5
+- ← Backspace              KEY_Char_Num[=0]=42
+- C                        KEY_Char_Num[=0]=6
+- CapsLock                 KEY_Char_Num[=0]=57
+- D                        KEY_Char_Num[=0]=7
+- Delete                   KEY_Char_Num[=0]=76
+- ÷                        KEY_Char_Num[=0]=84
+- E                        KEY_Char_Num[=0]=8
+- ESC                      KEY_Char_Num[=0]=41
+- End                      KEY_Char_Num[=0]=77
+- Enter                    KEY_Char_Num[=0]=40
+- F                        KEY_Char_Num[=0]=9
+- F1                       KEY_Char_Num[=0]=58
+- F10                      KEY_Char_Num[=0]=67
+- F11                      KEY_Char_Num[=0]=68
+- F12                      KEY_Char_Num[=0]=69
+- F2                       KEY_Char_Num[=0]=59
+- F3                       KEY_Char_Num[=0]=60
+- F4                       KEY_Char_Num[=0]=61
+- F5                       KEY_Char_Num[=0]=62
+- F6                       KEY_Char_Num[=0]=63
+- F7                       KEY_Char_Num[=0]=64
+- F8                       KEY_Char_Num[=0]=65
+- F9                       KEY_Char_Num[=0]=66
+- G                        KEY_Char_Num[=0]=10
+- H                        KEY_Char_Num[=0]=11
+- Home                     KEY_Char_Num[=0]=74
+- I                        KEY_Char_Num[=0]=12
+- Insert                   KEY_Char_Num[=0]=73
+- J                        KEY_Char_Num[=0]=13
+- K                        KEY_Char_Num[=0]=14
+- L                        KEY_Char_Num[=0]=15
+- M                        KEY_Char_Num[=0]=16
+- 0                        KEY_Char_Num[=0]=98
+- 1                        KEY_Char_Num[=0]=89
+- 2                        KEY_Char_Num[=0]=90
+- 3                        KEY_Char_Num[=0]=91
+- 4                        KEY_Char_Num[=0]=92
+- 5                        KEY_Char_Num[=0]=93
+- 6                        KEY_Char_Num[=0]=94
+- 7                        KEY_Char_Num[=0]=95
+- 8                        KEY_Char_Num[=0]=96
+- 9                        KEY_Char_Num[=0]=97
+- ·                        KEY_Char_Num[=0]=99
+- ▤                        KEY_Char_Num[=0]=101
+- N                        KEY_Char_Num[=0]=17
+- NULL                     KeyType_Num[=0]=0
+- NumLock                  KEY_Char_Num[=0]=83
+- O                        KEY_Char_Num[=0]=18
+- P                        KEY_Char_Num[=0]=19
+- PauseBreak               KEY_Char_Num[=0]=72
+- Page Down                KEY_Char_Num[=0]=78
+- Page Up                  KEY_Char_Num[=0]=75
+- PrtScSysRq               KEY_Char_Num[=0]=70
+- Q                        KEY_Char_Num[=0]=20
+- R                        KEY_Char_Num[=0]=21
+- S                        KEY_Char_Num[=0]=22
+- ScrollLock               KEY_Char_Num[=0]=71
+- Space                    KEY_Char_Num[=0]=44
+- \uffe3－                  KEY_Char_Num[=0]=45
+- T                        KEY_Char_Num[=0]=23
+- Tab                      KEY_Char_Num[=0]=43
+- U                        KEY_Char_Num[=0]=24
+- V                        KEY_Char_Num[=0]=25
+- W                        KEY_Char_Num[=0]=26
+- X                        KEY_Char_Num[=0]=27
+- Y                        KEY_Char_Num[=0]=28
+- Z                        KEY_Char_Num[=0]=29
+- ＋                        KEY_Char_Num[=0]=87
+- ~ 、                      KEY_Char_Num[=0]=53
+- ＜ ，                      KEY_Char_Num[=0]=54
+- ： ；                      KEY_Char_Num[=0]=51
+- ↓                        KEY_Char_Num[=0]=81
+- ↑                        KEY_Char_Num[=0]=82
+- ←                        KEY_Char_Num[=0]=80
+- →                        KEY_Char_Num[=0]=79
+- ＞ .                      KEY_Char_Num[=0]=55
+- { [                      KEY_Char_Num[=0]=47
+- } ]                      KEY_Char_Num[=0]=48
+- ×                        KEY_Char_Num[=0]=85
+- | \\                     KEY_Char_Num[=0]=49
+- －                        KEY_Char_Num[=0]=86
+- ?  /                     KEY_Char_Num[=0]=56
+- ＂ ＇                      KEY_Char_Num[=0]=52
+- Alt                      KEY_Char_Num[=1]=4 KeyType_Num[=0]=1
+- Ctrl                     KEY_Char_Num[=1]=1 KeyType_Num[=0]=1
+- Shift                    KEY_Char_Num[=1]=2 KeyType_Num[=0]=1
+- Win                      KEY_Char_Num[=1]=8 KeyType_Num[=0]=1
+
+## FunKey
+- Alt+                     KEY_Char_Num[=1]=4
+- Right Alt+               KEY_Char_Num[=1]=64
+- Alt+Shift+               KEY_Char_Num[=1]=4 KEY_Char_Num[=1]=2
+- Ctrl+Alt+Shift+Win+      KEY_Char_Num[=1]=1 KEY_Char_Num[=1]=4 KEY_Char_Num[=1]=2 KEY_Char_Num[=1]=8 KEY_Char_Num[=1]=2 KeyType_Num[=0]=1
+- Ctrl+Alt+Win+            KEY_Char_Num[=1]=1 KEY_Char_Num[=1]=4 KEY_Char_Num[=1]=8
+- Right  Ctrl+             KEY_Char_Num[=1]=16
+- Ctrl+Shift+              KEY_Char_Num[=1]=1 KEY_Char_Num[=1]=2
+- Ctrl+Shift+Alt+          KEY_Char_Num[=1]=1 KEY_Char_Num[=1]=2 KEY_Char_Num[=1]=4
+- Ctrl+                    KEY_Char_Num[=1]=1
+- ～                        KEY_Char_Num[=0]=53
+- (                        KEY_Char_Num[=0]=38
+- )                        KEY_Char_Num[=0]=39
+- \uffe3                   KEY_Char_Num[=0]=45
+- ＋                        KEY_Char_Num[=0]=46
+- {                        KEY_Char_Num[=0]=47
+- }                        KEY_Char_Num[=0]=48
+- |                        KEY_Char_Num[=0]=49
+- ：                        KEY_Char_Num[=0]=51
+- ＂                        KEY_Char_Num[=0]=52
+- ＜                        KEY_Char_Num[=0]=54
+- ！                        KEY_Char_Num[=0]=30
+- ＞                        KEY_Char_Num[=0]=55
+- ？                        KEY_Char_Num[=0]=56
+- @                        KEY_Char_Num[=0]=31
+- #                        KEY_Char_Num[=0]=32
+- $                        KEY_Char_Num[=0]=33
+- %                        KEY_Char_Num[=0]=34
+- ∧                        KEY_Char_Num[=0]=35
+- ＆                        KEY_Char_Num[=0]=36
+- *                        KEY_Char_Num[=0]=37
+- Shift+Win+               KEY_Char_Num[=1]=2 KEY_Char_Num[=1]=8
+- Shift+                   KEY_Char_Num[=1]=2
+- Right Shift+             KEY_Char_Num[=1]=32
+- Right Win+               KEY_Char_Num[=1]=128
+- Win+                     KEY_Char_Num[=1]=8
+- Ctrl+Alt+                KEY_Char_Num[=1]=1 KEY_Char_Num[=1]=4
+
+## MULKey
+- KEY_Mute                 Key_Fun_Num[=0]=4 KEY_Char_Num[=0]=4 Key_Fun_Num[=1]=1 KEY_Char_Num[=1]=1 Key_Fun_Num[=0]=226 KEY_Char_Num[=0]=226
+- KEY_NextSong             Key_Fun_Num[=1]=1 KEY_Char_Num[=1]=1 Key_Fun_Num[=1]=10 KEY_Char_Num[=1]=10 Key_Fun_Num[=0]=181 KEY_Char_Num[=0]=181
+- KEY_Play                 Key_Fun_Num[=0]=64 KEY_Char_Num[=0]=64 Key_Fun_Num[=1]=4 KEY_Char_Num[=1]=4 Key_Fun_Num[=0]=205 KEY_Char_Num[=0]=205
+- KEY_PreSong              Key_Fun_Num[=0]=128 KEY_Char_Num[=0]=128 Key_Fun_Num[=1]=11 KEY_Char_Num[=1]=11 Key_Fun_Num[=0]=182 KEY_Char_Num[=0]=182
+- KEY_VolumeAdd            Key_Fun_Num[=0]=2 KEY_Char_Num[=0]=2 Key_Fun_Num[=0]=64 KEY_Char_Num[=0]=64 Key_Fun_Num[=0]=233 KEY_Char_Num[=0]=233
+- KEY_VolumeSub            Key_Fun_Num[=0]=1 KEY_Char_Num[=0]=1 Key_Fun_Num[=0]=128 KEY_Char_Num[=0]=128 Key_Fun_Num[=0]=234 KEY_Char_Num[=0]=234
+
+## MouseKey
+- Alt_Mouse_wheel_Down     KEY_Char_Num[=0]=0 KEY_Char_Num[=1]=0 KEY_Char_Num[=2]=0 KEY_Char_Num[=3]=255 KEY_Char_Num[=1]=4 KEY_Char_Num[=4]=4
+- Alt_Mouse_wheel_Up       KEY_Char_Num[=0]=0 KEY_Char_Num[=1]=0 KEY_Char_Num[=2]=0 KEY_Char_Num[=3]=1 KEY_Char_Num[=1]=4 KEY_Char_Num[=4]=4
+- Ctrl_Mouse_wheel_Down    KEY_Char_Num[=0]=0 KEY_Char_Num[=1]=0 KEY_Char_Num[=2]=0 KEY_Char_Num[=3]=255 KEY_Char_Num[=1]=1 KEY_Char_Num[=4]=1
+- Ctrl_Mouse_wheel_Up      KEY_Char_Num[=0]=0 KEY_Char_Num[=1]=0 KEY_Char_Num[=2]=0 KEY_Char_Num[=3]=1 KEY_Char_Num[=1]=1 KEY_Char_Num[=4]=1
+- KEY_MOUSE_WHEEL_ADD      KEY_Char_Num[=0]=0 KEY_Char_Num[=1]=0 KEY_Char_Num[=2]=0 KEY_Char_Num[=3]=1
+- KEY_MOUSE_WHEEL_SUB      KEY_Char_Num[=0]=0 KEY_Char_Num[=1]=0 KEY_Char_Num[=2]=0 KEY_Char_Num[=3]=255
+- KEY_Mouse_Centre         KEY_Char_Num[=0]=4 KEY_Char_Num[=1]=0 KEY_Char_Num[=2]=0 KEY_Char_Num[=3]=0
+- KEY_Mouse_Left           KEY_Char_Num[=0]=1 KEY_Char_Num[=1]=0 KEY_Char_Num[=2]=0 KEY_Char_Num[=3]=0
+- KEY_Mouse_Right          KEY_Char_Num[=0]=2 KEY_Char_Num[=1]=0 KEY_Char_Num[=2]=0 KEY_Char_Num[=3]=0
+- Shift_Mouse_wheel_Down   KEY_Char_Num[=0]=0 KEY_Char_Num[=1]=0 KEY_Char_Num[=2]=0 KEY_Char_Num[=3]=255 KEY_Char_Num[=1]=2 KEY_Char_Num[=4]=2
+- Shift_Mouse_wheel_Up     KEY_Char_Num[=0]=0 KEY_Char_Num[=1]=0 KEY_Char_Num[=2]=0 KEY_Char_Num[=3]=1 KEY_Char_Num[=1]=2 KEY_Char_Num[=4]=2

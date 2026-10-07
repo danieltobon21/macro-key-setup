@@ -1,0 +1,2245 @@
+{
+ "BasicKeys": {
+  "KEY_A": {
+   "label": "A",
+   "writes": [
+    {
+     "slot": "KEY_Char_Num",
+     "op": "=",
+     "offset": 0,
+     "val": 4
+    }
+   ]
+  },
+  "KEY_B": {
+   "label": "B",
+   "writes": [
+    {
+     "slot": "KEY_Char_Num",
+     "op": "=",
+     "offset": 0,
+     "val": 5
+    }
+   ]
+  },
+  "KEY_C": {
+   "label": "C",
+   "writes": [
+    {
+     "slot": "KEY_Char_Num",
+     "op": "=",
+     "offset": 0,
+     "val": 6
+    }
+   ]
+  },
+  "KEY_D": {
+   "label": "D",
+   "writes": [
+    {
+     "slot": "KEY_Char_Num",
+     "op": "=",
+     "offset": 0,
+     "val": 7
+    }
+   ]
+  },
+  "KEY_E": {
+   "label": "E",
+   "writes": [
+    {
+     "slot": "KEY_Char_Num",
+     "op": "=",
+     "offset": 0,
+     "val": 8
+    }
+   ]
+  },
+  "KEY_F": {
+   "label": "F",
+   "writes": [
+    {
+     "slot": "KEY_Char_Num",
+     "op": "=",
+     "offset": 0,
+     "val": 9
+    }
+   ]
+  },
+  "KEY_G": {
+   "label": "G",
+   "writes": [
+    {
+     "slot": "KEY_Char_Num",
+     "op": "=",
+     "offset": 0,
+     "val": 10
+    }
+   ]
+  },
+  "KEY_H": {
+   "label": "H",
+   "writes": [
+    {
+     "slot": "KEY_Char_Num",
+     "op": "=",
+     "offset": 0,
+     "val": 11
+    }
+   ]
+  },
+  "KEY_I": {
+   "label": "I",
+   "writes": [
+    {
+     "slot": "KEY_Char_Num",
+     "op": "=",
+     "offset": 0,
+     "val": 12
+    }
+   ]
+  },
+  "KEY_J": {
+   "label": "J",
+   "writes": [
+    {
+     "slot": "KEY_Char_Num",
+     "op": "=",
+     "offset": 0,
+     "val": 13
+    }
+   ]
+  },
+  "KEY_K": {
+   "label": "K",
+   "writes": [
+    {
+     "slot": "KEY_Char_Num",
+     "op": "=",
+     "offset": 0,
+     "val": 14
+    }
+   ]
+  },
+  "KEY_L": {
+   "label": "L",
+   "writes": [
+    {
+     "slot": "KEY_Char_Num",
+     "op": "=",
+     "offset": 0,
+     "val": 15
+    }
+   ]
+  },
+  "KEY_M": {
+   "label": "M",
+   "writes": [
+    {
+     "slot": "KEY_Char_Num",
+     "op": "=",
+     "offset": 0,
+     "val": 16
+    }
+   ]
+  },
+  "KEY_N": {
+   "label": "N",
+   "writes": [
+    {
+     "slot": "KEY_Char_Num",
+     "op": "=",
+     "offset": 0,
+     "val": 17
+    }
+   ]
+  },
+  "KEY_O": {
+   "label": "O",
+   "writes": [
+    {
+     "slot": "KEY_Char_Num",
+     "op": "=",
+     "offset": 0,
+     "val": 18
+    }
+   ]
+  },
+  "KEY_P": {
+   "label": "P",
+   "writes": [
+    {
+     "slot": "KEY_Char_Num",
+     "op": "=",
+     "offset": 0,
+     "val": 19
+    }
+   ]
+  },
+  "KEY_Q": {
+   "label": "Q",
+   "writes": [
+    {
+     "slot": "KEY_Char_Num",
+     "op": "=",
+     "offset": 0,
+     "val": 20
+    }
+   ]
+  },
+  "KEY_R": {
+   "label": "R",
+   "writes": [
+    {
+     "slot": "KEY_Char_Num",
+     "op": "=",
+     "offset": 0,
+     "val": 21
+    }
+   ]
+  },
+  "KEY_S": {
+   "label": "S",
+   "writes": [
+    {
+     "slot": "KEY_Char_Num",
+     "op": "=",
+     "offset": 0,
+     "val": 22
+    }
+   ]
+  },
+  "KEY_T": {
+   "label": "T",
+   "writes": [
+    {
+     "slot": "KEY_Char_Num",
+     "op": "=",
+     "offset": 0,
+     "val": 23
+    }
+   ]
+  },
+  "KEY_U": {
+   "label": "U",
+   "writes": [
+    {
+     "slot": "KEY_Char_Num",
+     "op": "=",
+     "offset": 0,
+     "val": 24
+    }
+   ]
+  },
+  "KEY_V": {
+   "label": "V",
+   "writes": [
+    {
+     "slot": "KEY_Char_Num",
+     "op": "=",
+     "offset": 0,
+     "val": 25
+    }
+   ]
+  },
+  "KEY_W": {
+   "label": "W",
+   "writes": [
+    {
+     "slot": "KEY_Char_Num",
+     "op": "=",
+     "offset": 0,
+     "val": 26
+    }
+   ]
+  },
+  "KEY_X": {
+   "label": "X",
+   "writes": [
+    {
+     "slot": "KEY_Char_Num",
+     "op": "=",
+     "offset": 0,
+     "val": 27
+    }
+   ]
+  },
+  "KEY_Y": {
+   "label": "Y",
+   "writes": [
+    {
+     "slot": "KEY_Char_Num",
+     "op": "=",
+     "offset": 0,
+     "val": 28
+    }
+   ]
+  },
+  "KEY_Z": {
+   "label": "Z",
+   "writes": [
+    {
+     "slot": "KEY_Char_Num",
+     "op": "=",
+     "offset": 0,
+     "val": 29
+    }
+   ]
+  },
+  "KEY_1": {
+   "label": "! 1",
+   "writes": [
+    {
+     "slot": "KEY_Char_Num",
+     "op": "=",
+     "offset": 0,
+     "val": 30
+    }
+   ]
+  },
+  "KEY_2": {
+   "label": "@ 2",
+   "writes": [
+    {
+     "slot": "KEY_Char_Num",
+     "op": "=",
+     "offset": 0,
+     "val": 31
+    }
+   ]
+  },
+  "KEY_3": {
+   "label": "# 3",
+   "writes": [
+    {
+     "slot": "KEY_Char_Num",
+     "op": "=",
+     "offset": 0,
+     "val": 32
+    }
+   ]
+  },
+  "KEY_4": {
+   "label": "$ 4",
+   "writes": [
+    {
+     "slot": "KEY_Char_Num",
+     "op": "=",
+     "offset": 0,
+     "val": 33
+    }
+   ]
+  },
+  "KEY_5": {
+   "label": "% 5",
+   "writes": [
+    {
+     "slot": "KEY_Char_Num",
+     "op": "=",
+     "offset": 0,
+     "val": 34
+    }
+   ]
+  },
+  "KEY_6": {
+   "label": "^ 6",
+   "writes": [
+    {
+     "slot": "KEY_Char_Num",
+     "op": "=",
+     "offset": 0,
+     "val": 35
+    }
+   ]
+  },
+  "KEY_7": {
+   "label": "\uff06 7",
+   "writes": [
+    {
+     "slot": "KEY_Char_Num",
+     "op": "=",
+     "offset": 0,
+     "val": 36
+    }
+   ]
+  },
+  "KEY_8": {
+   "label": "* 8",
+   "writes": [
+    {
+     "slot": "KEY_Char_Num",
+     "op": "=",
+     "offset": 0,
+     "val": 37
+    }
+   ]
+  },
+  "KEY_9": {
+   "label": "( 9",
+   "writes": [
+    {
+     "slot": "KEY_Char_Num",
+     "op": "=",
+     "offset": 0,
+     "val": 38
+    }
+   ]
+  },
+  "KEY_0": {
+   "label": ") 0",
+   "writes": [
+    {
+     "slot": "KEY_Char_Num",
+     "op": "=",
+     "offset": 0,
+     "val": 39
+    }
+   ]
+  },
+  "KEY_Enter": {
+   "label": "Enter",
+   "writes": [
+    {
+     "slot": "KEY_Char_Num",
+     "op": "=",
+     "offset": 0,
+     "val": 40
+    }
+   ]
+  },
+  "KEY_ESC": {
+   "label": "ESC",
+   "writes": [
+    {
+     "slot": "KEY_Char_Num",
+     "op": "=",
+     "offset": 0,
+     "val": 41
+    }
+   ]
+  },
+  "KEY_BACKSPACE": {
+   "label": "\u2190 Backspace",
+   "writes": [
+    {
+     "slot": "KEY_Char_Num",
+     "op": "=",
+     "offset": 0,
+     "val": 42
+    }
+   ]
+  },
+  "KEY_Tabel": {
+   "label": "Tab",
+   "writes": [
+    {
+     "slot": "KEY_Char_Num",
+     "op": "=",
+     "offset": 0,
+     "val": 43
+    }
+   ]
+  },
+  "KEY_SpaceKey": {
+   "label": "Space",
+   "writes": [
+    {
+     "slot": "KEY_Char_Num",
+     "op": "=",
+     "offset": 0,
+     "val": 44
+    }
+   ]
+  },
+  "KEY_SubSub": {
+   "label": "\\uffe3\uff0d",
+   "writes": [
+    {
+     "slot": "KEY_Char_Num",
+     "op": "=",
+     "offset": 0,
+     "val": 45
+    }
+   ]
+  },
+  "KEY_ADDADD": {
+   "label": "\uff0b=",
+   "writes": [
+    {
+     "slot": "KEY_Char_Num",
+     "op": "=",
+     "offset": 0,
+     "val": 46
+    }
+   ]
+  },
+  "KEY_kuohao": {
+   "label": "{ [",
+   "writes": [
+    {
+     "slot": "KEY_Char_Num",
+     "op": "=",
+     "offset": 0,
+     "val": 47
+    }
+   ]
+  },
+  "KEY_kuohao2": {
+   "label": "} ]",
+   "writes": [
+    {
+     "slot": "KEY_Char_Num",
+     "op": "=",
+     "offset": 0,
+     "val": 48
+    }
+   ]
+  },
+  "KEY_shu": {
+   "label": "| \\\\",
+   "writes": [
+    {
+     "slot": "KEY_Char_Num",
+     "op": "=",
+     "offset": 0,
+     "val": 49
+    }
+   ]
+  },
+  "KEY_bolanghao": {
+   "label": "~ \u3001",
+   "writes": [
+    {
+     "slot": "KEY_Char_Num",
+     "op": "=",
+     "offset": 0,
+     "val": 53
+    }
+   ]
+  },
+  "KEY_fenhao": {
+   "label": "\uff1a \uff1b",
+   "writes": [
+    {
+     "slot": "KEY_Char_Num",
+     "op": "=",
+     "offset": 0,
+     "val": 51
+    }
+   ]
+  },
+  "KEY_yinghao": {
+   "label": "\uff02 \uff07",
+   "writes": [
+    {
+     "slot": "KEY_Char_Num",
+     "op": "=",
+     "offset": 0,
+     "val": 52
+    }
+   ]
+  },
+  "KEY_douhao": {
+   "label": "\uff1c \uff0c",
+   "writes": [
+    {
+     "slot": "KEY_Char_Num",
+     "op": "=",
+     "offset": 0,
+     "val": 54
+    }
+   ]
+  },
+  "KEY_juhao": {
+   "label": "\uff1e .",
+   "writes": [
+    {
+     "slot": "KEY_Char_Num",
+     "op": "=",
+     "offset": 0,
+     "val": 55
+    }
+   ]
+  },
+  "KEY_wenhao": {
+   "label": "?  /",
+   "writes": [
+    {
+     "slot": "KEY_Char_Num",
+     "op": "=",
+     "offset": 0,
+     "val": 56
+    }
+   ]
+  },
+  "KEY_CapsLock": {
+   "label": "CapsLock",
+   "writes": [
+    {
+     "slot": "KEY_Char_Num",
+     "op": "=",
+     "offset": 0,
+     "val": 57
+    }
+   ]
+  },
+  "KEY_F1": {
+   "label": "F1",
+   "writes": [
+    {
+     "slot": "KEY_Char_Num",
+     "op": "=",
+     "offset": 0,
+     "val": 58
+    }
+   ]
+  },
+  "KEY_F2": {
+   "label": "F2",
+   "writes": [
+    {
+     "slot": "KEY_Char_Num",
+     "op": "=",
+     "offset": 0,
+     "val": 59
+    }
+   ]
+  },
+  "KEY_F3": {
+   "label": "F3",
+   "writes": [
+    {
+     "slot": "KEY_Char_Num",
+     "op": "=",
+     "offset": 0,
+     "val": 60
+    }
+   ]
+  },
+  "KEY_F4": {
+   "label": "F4",
+   "writes": [
+    {
+     "slot": "KEY_Char_Num",
+     "op": "=",
+     "offset": 0,
+     "val": 61
+    }
+   ]
+  },
+  "KEY_F5": {
+   "label": "F5",
+   "writes": [
+    {
+     "slot": "KEY_Char_Num",
+     "op": "=",
+     "offset": 0,
+     "val": 62
+    }
+   ]
+  },
+  "KEY_F6": {
+   "label": "F6",
+   "writes": [
+    {
+     "slot": "KEY_Char_Num",
+     "op": "=",
+     "offset": 0,
+     "val": 63
+    }
+   ]
+  },
+  "KEY_F7": {
+   "label": "F7",
+   "writes": [
+    {
+     "slot": "KEY_Char_Num",
+     "op": "=",
+     "offset": 0,
+     "val": 64
+    }
+   ]
+  },
+  "KEY_F8": {
+   "label": "F8",
+   "writes": [
+    {
+     "slot": "KEY_Char_Num",
+     "op": "=",
+     "offset": 0,
+     "val": 65
+    }
+   ]
+  },
+  "KEY_F9": {
+   "label": "F9",
+   "writes": [
+    {
+     "slot": "KEY_Char_Num",
+     "op": "=",
+     "offset": 0,
+     "val": 66
+    }
+   ]
+  },
+  "KEY_F10": {
+   "label": "F10",
+   "writes": [
+    {
+     "slot": "KEY_Char_Num",
+     "op": "=",
+     "offset": 0,
+     "val": 67
+    }
+   ]
+  },
+  "KEY_F11": {
+   "label": "F11",
+   "writes": [
+    {
+     "slot": "KEY_Char_Num",
+     "op": "=",
+     "offset": 0,
+     "val": 68
+    }
+   ]
+  },
+  "KEY_F12": {
+   "label": "F12",
+   "writes": [
+    {
+     "slot": "KEY_Char_Num",
+     "op": "=",
+     "offset": 0,
+     "val": 69
+    }
+   ]
+  },
+  "KEY_PrtSc": {
+   "label": "PrtScSysRq",
+   "writes": [
+    {
+     "slot": "KEY_Char_Num",
+     "op": "=",
+     "offset": 0,
+     "val": 70
+    }
+   ]
+  },
+  "KEY_ScrollLock": {
+   "label": "ScrollLock",
+   "writes": [
+    {
+     "slot": "KEY_Char_Num",
+     "op": "=",
+     "offset": 0,
+     "val": 71
+    }
+   ]
+  },
+  "KEY_PauseBreak": {
+   "label": "PauseBreak",
+   "writes": [
+    {
+     "slot": "KEY_Char_Num",
+     "op": "=",
+     "offset": 0,
+     "val": 72
+    }
+   ]
+  },
+  "KEY_INS": {
+   "label": "Insert",
+   "writes": [
+    {
+     "slot": "KEY_Char_Num",
+     "op": "=",
+     "offset": 0,
+     "val": 73
+    }
+   ]
+  },
+  "KEY_HOME": {
+   "label": "Home",
+   "writes": [
+    {
+     "slot": "KEY_Char_Num",
+     "op": "=",
+     "offset": 0,
+     "val": 74
+    }
+   ]
+  },
+  "KEY_PgUg": {
+   "label": "Page Up",
+   "writes": [
+    {
+     "slot": "KEY_Char_Num",
+     "op": "=",
+     "offset": 0,
+     "val": 75
+    }
+   ]
+  },
+  "KEY_DEL": {
+   "label": "Delete",
+   "writes": [
+    {
+     "slot": "KEY_Char_Num",
+     "op": "=",
+     "offset": 0,
+     "val": 76
+    }
+   ]
+  },
+  "KEY_End": {
+   "label": "End",
+   "writes": [
+    {
+     "slot": "KEY_Char_Num",
+     "op": "=",
+     "offset": 0,
+     "val": 77
+    }
+   ]
+  },
+  "KEY_PgDn": {
+   "label": "Page Down",
+   "writes": [
+    {
+     "slot": "KEY_Char_Num",
+     "op": "=",
+     "offset": 0,
+     "val": 78
+    }
+   ]
+  },
+  "KEY_jiantou_right": {
+   "label": "\u2192",
+   "writes": [
+    {
+     "slot": "KEY_Char_Num",
+     "op": "=",
+     "offset": 0,
+     "val": 79
+    }
+   ]
+  },
+  "KEY_jiantou_left": {
+   "label": "\u2190",
+   "writes": [
+    {
+     "slot": "KEY_Char_Num",
+     "op": "=",
+     "offset": 0,
+     "val": 80
+    }
+   ]
+  },
+  "KEY_jiantou_Down": {
+   "label": "\u2193",
+   "writes": [
+    {
+     "slot": "KEY_Char_Num",
+     "op": "=",
+     "offset": 0,
+     "val": 81
+    }
+   ]
+  },
+  "KEY_jiantou_Up": {
+   "label": "\u2191",
+   "writes": [
+    {
+     "slot": "KEY_Char_Num",
+     "op": "=",
+     "offset": 0,
+     "val": 82
+    }
+   ]
+  },
+  "KEY_NUM": {
+   "label": "NumLock",
+   "writes": [
+    {
+     "slot": "KEY_Char_Num",
+     "op": "=",
+     "offset": 0,
+     "val": 83
+    }
+   ]
+  },
+  "KEY_DIV": {
+   "label": "\u00f7",
+   "writes": [
+    {
+     "slot": "KEY_Char_Num",
+     "op": "=",
+     "offset": 0,
+     "val": 84
+    }
+   ]
+  },
+  "KEY_multiply": {
+   "label": "\u00d7",
+   "writes": [
+    {
+     "slot": "KEY_Char_Num",
+     "op": "=",
+     "offset": 0,
+     "val": 85
+    }
+   ]
+  },
+  "KEY_sub": {
+   "label": "\uff0d",
+   "writes": [
+    {
+     "slot": "KEY_Char_Num",
+     "op": "=",
+     "offset": 0,
+     "val": 86
+    }
+   ]
+  },
+  "KEY_add": {
+   "label": "\uff0b",
+   "writes": [
+    {
+     "slot": "KEY_Char_Num",
+     "op": "=",
+     "offset": 0,
+     "val": 87
+    }
+   ]
+  },
+  "KEY_MIN_1": {
+   "label": "1",
+   "writes": [
+    {
+     "slot": "KEY_Char_Num",
+     "op": "=",
+     "offset": 0,
+     "val": 89
+    }
+   ]
+  },
+  "KEY_MIN_2": {
+   "label": "2",
+   "writes": [
+    {
+     "slot": "KEY_Char_Num",
+     "op": "=",
+     "offset": 0,
+     "val": 90
+    }
+   ]
+  },
+  "KEY_MIN_3": {
+   "label": "3",
+   "writes": [
+    {
+     "slot": "KEY_Char_Num",
+     "op": "=",
+     "offset": 0,
+     "val": 91
+    }
+   ]
+  },
+  "KEY_MIN_4": {
+   "label": "4",
+   "writes": [
+    {
+     "slot": "KEY_Char_Num",
+     "op": "=",
+     "offset": 0,
+     "val": 92
+    }
+   ]
+  },
+  "KEY_MIN_5": {
+   "label": "5",
+   "writes": [
+    {
+     "slot": "KEY_Char_Num",
+     "op": "=",
+     "offset": 0,
+     "val": 93
+    }
+   ]
+  },
+  "KEY_MIN_6": {
+   "label": "6",
+   "writes": [
+    {
+     "slot": "KEY_Char_Num",
+     "op": "=",
+     "offset": 0,
+     "val": 94
+    }
+   ]
+  },
+  "KEY_MIN_7": {
+   "label": "7",
+   "writes": [
+    {
+     "slot": "KEY_Char_Num",
+     "op": "=",
+     "offset": 0,
+     "val": 95
+    }
+   ]
+  },
+  "KEY_MIN_8": {
+   "label": "8",
+   "writes": [
+    {
+     "slot": "KEY_Char_Num",
+     "op": "=",
+     "offset": 0,
+     "val": 96
+    }
+   ]
+  },
+  "KEY_MIN_9": {
+   "label": "9",
+   "writes": [
+    {
+     "slot": "KEY_Char_Num",
+     "op": "=",
+     "offset": 0,
+     "val": 97
+    }
+   ]
+  },
+  "KEY_MIN_0": {
+   "label": "0",
+   "writes": [
+    {
+     "slot": "KEY_Char_Num",
+     "op": "=",
+     "offset": 0,
+     "val": 98
+    }
+   ]
+  },
+  "KEY_MIN_Dot": {
+   "label": "\u00b7",
+   "writes": [
+    {
+     "slot": "KEY_Char_Num",
+     "op": "=",
+     "offset": 0,
+     "val": 99
+    }
+   ]
+  },
+  "KEY_Menu": {
+   "label": "\u25a4",
+   "writes": [
+    {
+     "slot": "KEY_Char_Num",
+     "op": "=",
+     "offset": 0,
+     "val": 101
+    }
+   ]
+  },
+  "Key_Ctrl": {
+   "label": "Ctrl",
+   "writes": [
+    {
+     "slot": "KEY_Char_Num",
+     "op": "-",
+     "offset": 1,
+     "val": 1
+    },
+    {
+     "slot": "KeyType_Num",
+     "op": "=",
+     "offset": 0,
+     "val": 1
+    }
+   ]
+  },
+  "Key_Shift": {
+   "label": "Shift",
+   "writes": [
+    {
+     "slot": "KEY_Char_Num",
+     "op": "-",
+     "offset": 1,
+     "val": 2
+    },
+    {
+     "slot": "KeyType_Num",
+     "op": "=",
+     "offset": 0,
+     "val": 1
+    }
+   ]
+  },
+  "Key_Alt": {
+   "label": "Alt",
+   "writes": [
+    {
+     "slot": "KEY_Char_Num",
+     "op": "-",
+     "offset": 1,
+     "val": 4
+    },
+    {
+     "slot": "KeyType_Num",
+     "op": "=",
+     "offset": 0,
+     "val": 1
+    }
+   ]
+  },
+  "Key_Win": {
+   "label": "Win",
+   "writes": [
+    {
+     "slot": "KEY_Char_Num",
+     "op": "-",
+     "offset": 1,
+     "val": 8
+    },
+    {
+     "slot": "KeyType_Num",
+     "op": "=",
+     "offset": 0,
+     "val": 1
+    }
+   ]
+  },
+  "KEY_NILL": {
+   "label": "NULL",
+   "writes": [
+    {
+     "slot": "KeyType_Num",
+     "op": "=",
+     "offset": 0,
+     "val": 0
+    }
+   ]
+  }
+ },
+ "FunKey": {
+  "KEY_Ctrl_left": {
+   "label": "Ctrl+",
+   "writes": [
+    {
+     "slot": "KEY_Char_Num",
+     "op": "-",
+     "offset": 1,
+     "val": 1
+    }
+   ]
+  },
+  "KEY_Shift_left": {
+   "label": "Shift+",
+   "writes": [
+    {
+     "slot": "KEY_Char_Num",
+     "op": "-",
+     "offset": 1,
+     "val": 2
+    }
+   ]
+  },
+  "KEY_ALT_Left": {
+   "label": "Alt+",
+   "writes": [
+    {
+     "slot": "KEY_Char_Num",
+     "op": "-",
+     "offset": 1,
+     "val": 4
+    }
+   ]
+  },
+  "KEY_Win_left": {
+   "label": "Win+",
+   "writes": [
+    {
+     "slot": "KEY_Char_Num",
+     "op": "-",
+     "offset": 1,
+     "val": 8
+    }
+   ]
+  },
+  "KEY_Ctrl_Right": {
+   "label": "Right  Ctrl+",
+   "writes": [
+    {
+     "slot": "KEY_Char_Num",
+     "op": "-",
+     "offset": 1,
+     "val": 16
+    }
+   ]
+  },
+  "KEY_Shift_right": {
+   "label": "Right Shift+",
+   "writes": [
+    {
+     "slot": "KEY_Char_Num",
+     "op": "-",
+     "offset": 1,
+     "val": 32
+    }
+   ]
+  },
+  "KEY_ALT_Right": {
+   "label": "Right Alt+",
+   "writes": [
+    {
+     "slot": "KEY_Char_Num",
+     "op": "-",
+     "offset": 1,
+     "val": 64
+    }
+   ]
+  },
+  "KEY_Win_Right": {
+   "label": "Right Win+",
+   "writes": [
+    {
+     "slot": "KEY_Char_Num",
+     "op": "-",
+     "offset": 1,
+     "val": 128
+    }
+   ]
+  },
+  "KEY_ctrl_alt": {
+   "label": "Ctrl+Alt+",
+   "writes": [
+    {
+     "slot": "KEY_Char_Num",
+     "op": "-",
+     "offset": 1,
+     "val": 1
+    },
+    {
+     "slot": "KEY_Char_Num",
+     "op": "-",
+     "offset": 1,
+     "val": 4
+    }
+   ]
+  },
+  "KEY_Ctrl_Shift": {
+   "label": "Ctrl+Shift+",
+   "writes": [
+    {
+     "slot": "KEY_Char_Num",
+     "op": "-",
+     "offset": 1,
+     "val": 1
+    },
+    {
+     "slot": "KEY_Char_Num",
+     "op": "-",
+     "offset": 1,
+     "val": 2
+    }
+   ]
+  },
+  "KEY_Alt_Shift": {
+   "label": "Alt+Shift+",
+   "writes": [
+    {
+     "slot": "KEY_Char_Num",
+     "op": "-",
+     "offset": 1,
+     "val": 4
+    },
+    {
+     "slot": "KEY_Char_Num",
+     "op": "-",
+     "offset": 1,
+     "val": 2
+    }
+   ]
+  },
+  "KEY_Shift_Win": {
+   "label": "Shift+Win+",
+   "writes": [
+    {
+     "slot": "KEY_Char_Num",
+     "op": "-",
+     "offset": 1,
+     "val": 2
+    },
+    {
+     "slot": "KEY_Char_Num",
+     "op": "-",
+     "offset": 1,
+     "val": 8
+    }
+   ]
+  },
+  "KEY_Ctrl_Shift_Alt": {
+   "label": "Ctrl+Shift+Alt+",
+   "writes": [
+    {
+     "slot": "KEY_Char_Num",
+     "op": "-",
+     "offset": 1,
+     "val": 1
+    },
+    {
+     "slot": "KEY_Char_Num",
+     "op": "-",
+     "offset": 1,
+     "val": 2
+    },
+    {
+     "slot": "KEY_Char_Num",
+     "op": "-",
+     "offset": 1,
+     "val": 4
+    }
+   ]
+  },
+  "KEY_Ctrl_Alt_Win": {
+   "label": "Ctrl+Alt+Win+",
+   "writes": [
+    {
+     "slot": "KEY_Char_Num",
+     "op": "-",
+     "offset": 1,
+     "val": 1
+    },
+    {
+     "slot": "KEY_Char_Num",
+     "op": "-",
+     "offset": 1,
+     "val": 4
+    },
+    {
+     "slot": "KEY_Char_Num",
+     "op": "-",
+     "offset": 1,
+     "val": 8
+    }
+   ]
+  },
+  "KEY_Ctrl_Alt_Shift_Win": {
+   "label": "Ctrl+Alt+Shift+Win+",
+   "writes": [
+    {
+     "slot": "KEY_Char_Num",
+     "op": "-",
+     "offset": 1,
+     "val": 1
+    },
+    {
+     "slot": "KEY_Char_Num",
+     "op": "-",
+     "offset": 1,
+     "val": 4
+    },
+    {
+     "slot": "KEY_Char_Num",
+     "op": "-",
+     "offset": 1,
+     "val": 2
+    },
+    {
+     "slot": "KEY_Char_Num",
+     "op": "-",
+     "offset": 1,
+     "val": 8
+    },
+    {
+     "slot": "KEY_Char_Num",
+     "op": "-",
+     "offset": 1,
+     "val": 2
+    },
+    {
+     "slot": "KeyType_Num",
+     "op": "=",
+     "offset": 0,
+     "val": 1
+    }
+   ]
+  },
+  "KEY_Shift_And_1": {
+   "label": "\uff5e",
+   "writes": [
+    {
+     "slot": "KEY_Char_Num",
+     "op": "=",
+     "offset": 0,
+     "val": 53
+    }
+   ]
+  },
+  "KEY_Shift_And_2": {
+   "label": "\uff01",
+   "writes": [
+    {
+     "slot": "KEY_Char_Num",
+     "op": "=",
+     "offset": 0,
+     "val": 30
+    }
+   ]
+  },
+  "KEY_Shift_And_3": {
+   "label": "@",
+   "writes": [
+    {
+     "slot": "KEY_Char_Num",
+     "op": "=",
+     "offset": 0,
+     "val": 31
+    }
+   ]
+  },
+  "KEY_Shift_And_4": {
+   "label": "#",
+   "writes": [
+    {
+     "slot": "KEY_Char_Num",
+     "op": "=",
+     "offset": 0,
+     "val": 32
+    }
+   ]
+  },
+  "KEY_Shift_And_5": {
+   "label": "$",
+   "writes": [
+    {
+     "slot": "KEY_Char_Num",
+     "op": "=",
+     "offset": 0,
+     "val": 33
+    }
+   ]
+  },
+  "KEY_Shift_And_6": {
+   "label": "%",
+   "writes": [
+    {
+     "slot": "KEY_Char_Num",
+     "op": "=",
+     "offset": 0,
+     "val": 34
+    }
+   ]
+  },
+  "KEY_Shift_And_7": {
+   "label": "\u2227",
+   "writes": [
+    {
+     "slot": "KEY_Char_Num",
+     "op": "=",
+     "offset": 0,
+     "val": 35
+    }
+   ]
+  },
+  "KEY_Shift_And_8": {
+   "label": "\uff06",
+   "writes": [
+    {
+     "slot": "KEY_Char_Num",
+     "op": "=",
+     "offset": 0,
+     "val": 36
+    }
+   ]
+  },
+  "KEY_Shift_And_9": {
+   "label": "*",
+   "writes": [
+    {
+     "slot": "KEY_Char_Num",
+     "op": "=",
+     "offset": 0,
+     "val": 37
+    }
+   ]
+  },
+  "KEY_Shift_And_10": {
+   "label": "(",
+   "writes": [
+    {
+     "slot": "KEY_Char_Num",
+     "op": "=",
+     "offset": 0,
+     "val": 38
+    }
+   ]
+  },
+  "KEY_Shift_And_11": {
+   "label": ")",
+   "writes": [
+    {
+     "slot": "KEY_Char_Num",
+     "op": "=",
+     "offset": 0,
+     "val": 39
+    }
+   ]
+  },
+  "KEY_Shift_And_12": {
+   "label": "\\uffe3",
+   "writes": [
+    {
+     "slot": "KEY_Char_Num",
+     "op": "=",
+     "offset": 0,
+     "val": 45
+    }
+   ]
+  },
+  "KEY_Shift_And_13": {
+   "label": "\uff0b",
+   "writes": [
+    {
+     "slot": "KEY_Char_Num",
+     "op": "=",
+     "offset": 0,
+     "val": 46
+    }
+   ]
+  },
+  "KEY_Shift_And_14": {
+   "label": "{",
+   "writes": [
+    {
+     "slot": "KEY_Char_Num",
+     "op": "=",
+     "offset": 0,
+     "val": 47
+    }
+   ]
+  },
+  "KEY_Shift_And_15": {
+   "label": "}",
+   "writes": [
+    {
+     "slot": "KEY_Char_Num",
+     "op": "=",
+     "offset": 0,
+     "val": 48
+    }
+   ]
+  },
+  "KEY_Shift_And_16": {
+   "label": "|",
+   "writes": [
+    {
+     "slot": "KEY_Char_Num",
+     "op": "=",
+     "offset": 0,
+     "val": 49
+    }
+   ]
+  },
+  "KEY_Shift_And_17": {
+   "label": "\uff1a",
+   "writes": [
+    {
+     "slot": "KEY_Char_Num",
+     "op": "=",
+     "offset": 0,
+     "val": 51
+    }
+   ]
+  },
+  "KEY_Shift_And_18": {
+   "label": "\uff02",
+   "writes": [
+    {
+     "slot": "KEY_Char_Num",
+     "op": "=",
+     "offset": 0,
+     "val": 52
+    }
+   ]
+  },
+  "KEY_Shift_And_19": {
+   "label": "\uff1c",
+   "writes": [
+    {
+     "slot": "KEY_Char_Num",
+     "op": "=",
+     "offset": 0,
+     "val": 54
+    }
+   ]
+  },
+  "KEY_Shift_And_20": {
+   "label": "\uff1e",
+   "writes": [
+    {
+     "slot": "KEY_Char_Num",
+     "op": "=",
+     "offset": 0,
+     "val": 55
+    }
+   ]
+  },
+  "KEY_Shift_And_21": {
+   "label": "\uff1f",
+   "writes": [
+    {
+     "slot": "KEY_Char_Num",
+     "op": "=",
+     "offset": 0,
+     "val": 56
+    }
+   ]
+  }
+ },
+ "MULKey": {
+  "KEY_Play": {
+   "label": "KEY_Play",
+   "writes": [
+    {
+     "slot": "Key_Fun_Num",
+     "op": "=",
+     "offset": 0,
+     "val": 64
+    },
+    {
+     "slot": "KEY_Char_Num",
+     "op": "=",
+     "offset": 0,
+     "val": 64
+    },
+    {
+     "slot": "Key_Fun_Num",
+     "op": "+",
+     "offset": 1,
+     "val": 4
+    },
+    {
+     "slot": "KEY_Char_Num",
+     "op": "+",
+     "offset": 1,
+     "val": 4
+    },
+    {
+     "slot": "Key_Fun_Num",
+     "op": "=",
+     "offset": 0,
+     "val": 205
+    },
+    {
+     "slot": "KEY_Char_Num",
+     "op": "=",
+     "offset": 0,
+     "val": 205
+    }
+   ]
+  },
+  "KEY_PreSong": {
+   "label": "KEY_PreSong",
+   "writes": [
+    {
+     "slot": "Key_Fun_Num",
+     "op": "=",
+     "offset": 0,
+     "val": 128
+    },
+    {
+     "slot": "KEY_Char_Num",
+     "op": "=",
+     "offset": 0,
+     "val": 128
+    },
+    {
+     "slot": "Key_Fun_Num",
+     "op": "+",
+     "offset": 1,
+     "val": 11
+    },
+    {
+     "slot": "KEY_Char_Num",
+     "op": "+",
+     "offset": 1,
+     "val": 11
+    },
+    {
+     "slot": "Key_Fun_Num",
+     "op": "=",
+     "offset": 0,
+     "val": 182
+    },
+    {
+     "slot": "KEY_Char_Num",
+     "op": "=",
+     "offset": 0,
+     "val": 182
+    }
+   ]
+  },
+  "KEY_NextSong": {
+   "label": "KEY_NextSong",
+   "writes": [
+    {
+     "slot": "Key_Fun_Num",
+     "op": "+",
+     "offset": 1,
+     "val": 1
+    },
+    {
+     "slot": "KEY_Char_Num",
+     "op": "+",
+     "offset": 1,
+     "val": 1
+    },
+    {
+     "slot": "Key_Fun_Num",
+     "op": "+",
+     "offset": 1,
+     "val": 10
+    },
+    {
+     "slot": "KEY_Char_Num",
+     "op": "+",
+     "offset": 1,
+     "val": 10
+    },
+    {
+     "slot": "Key_Fun_Num",
+     "op": "=",
+     "offset": 0,
+     "val": 181
+    },
+    {
+     "slot": "KEY_Char_Num",
+     "op": "=",
+     "offset": 0,
+     "val": 181
+    }
+   ]
+  },
+  "KEY_Mute": {
+   "label": "KEY_Mute",
+   "writes": [
+    {
+     "slot": "Key_Fun_Num",
+     "op": "=",
+     "offset": 0,
+     "val": 4
+    },
+    {
+     "slot": "KEY_Char_Num",
+     "op": "=",
+     "offset": 0,
+     "val": 4
+    },
+    {
+     "slot": "Key_Fun_Num",
+     "op": "+",
+     "offset": 1,
+     "val": 1
+    },
+    {
+     "slot": "KEY_Char_Num",
+     "op": "+",
+     "offset": 1,
+     "val": 1
+    },
+    {
+     "slot": "Key_Fun_Num",
+     "op": "=",
+     "offset": 0,
+     "val": 226
+    },
+    {
+     "slot": "KEY_Char_Num",
+     "op": "=",
+     "offset": 0,
+     "val": 226
+    }
+   ]
+  },
+  "KEY_VolumeAdd": {
+   "label": "KEY_VolumeAdd",
+   "writes": [
+    {
+     "slot": "Key_Fun_Num",
+     "op": "=",
+     "offset": 0,
+     "val": 2
+    },
+    {
+     "slot": "KEY_Char_Num",
+     "op": "=",
+     "offset": 0,
+     "val": 2
+    },
+    {
+     "slot": "Key_Fun_Num",
+     "op": "=",
+     "offset": 0,
+     "val": 64
+    },
+    {
+     "slot": "KEY_Char_Num",
+     "op": "=",
+     "offset": 0,
+     "val": 64
+    },
+    {
+     "slot": "Key_Fun_Num",
+     "op": "=",
+     "offset": 0,
+     "val": 233
+    },
+    {
+     "slot": "KEY_Char_Num",
+     "op": "=",
+     "offset": 0,
+     "val": 233
+    }
+   ]
+  },
+  "KEY_VolumeSub": {
+   "label": "KEY_VolumeSub",
+   "writes": [
+    {
+     "slot": "Key_Fun_Num",
+     "op": "=",
+     "offset": 0,
+     "val": 1
+    },
+    {
+     "slot": "KEY_Char_Num",
+     "op": "=",
+     "offset": 0,
+     "val": 1
+    },
+    {
+     "slot": "Key_Fun_Num",
+     "op": "=",
+     "offset": 0,
+     "val": 128
+    },
+    {
+     "slot": "KEY_Char_Num",
+     "op": "=",
+     "offset": 0,
+     "val": 128
+    },
+    {
+     "slot": "Key_Fun_Num",
+     "op": "=",
+     "offset": 0,
+     "val": 234
+    },
+    {
+     "slot": "KEY_Char_Num",
+     "op": "=",
+     "offset": 0,
+     "val": 234
+    }
+   ]
+  }
+ },
+ "MouseKey": {
+  "KEY_Mouse_Left": {
+   "label": "KEY_Mouse_Left",
+   "writes": [
+    {
+     "slot": "KEY_Char_Num",
+     "op": "=",
+     "offset": 0,
+     "val": 1
+    },
+    {
+     "slot": "KEY_Char_Num",
+     "op": "+",
+     "offset": 1,
+     "val": 0
+    },
+    {
+     "slot": "KEY_Char_Num",
+     "op": "+",
+     "offset": 2,
+     "val": 0
+    },
+    {
+     "slot": "KEY_Char_Num",
+     "op": "+",
+     "offset": 3,
+     "val": 0
+    }
+   ]
+  },
+  "KEY_Mouse_Centre": {
+   "label": "KEY_Mouse_Centre",
+   "writes": [
+    {
+     "slot": "KEY_Char_Num",
+     "op": "=",
+     "offset": 0,
+     "val": 4
+    },
+    {
+     "slot": "KEY_Char_Num",
+     "op": "+",
+     "offset": 1,
+     "val": 0
+    },
+    {
+     "slot": "KEY_Char_Num",
+     "op": "+",
+     "offset": 2,
+     "val": 0
+    },
+    {
+     "slot": "KEY_Char_Num",
+     "op": "+",
+     "offset": 3,
+     "val": 0
+    }
+   ]
+  },
+  "KEY_Mouse_Right": {
+   "label": "KEY_Mouse_Right",
+   "writes": [
+    {
+     "slot": "KEY_Char_Num",
+     "op": "=",
+     "offset": 0,
+     "val": 2
+    },
+    {
+     "slot": "KEY_Char_Num",
+     "op": "+",
+     "offset": 1,
+     "val": 0
+    },
+    {
+     "slot": "KEY_Char_Num",
+     "op": "+",
+     "offset": 2,
+     "val": 0
+    },
+    {
+     "slot": "KEY_Char_Num",
+     "op": "+",
+     "offset": 3,
+     "val": 0
+    }
+   ]
+  },
+  "KEY_MOUSE_WHEEL_ADD": {
+   "label": "KEY_MOUSE_WHEEL_ADD",
+   "writes": [
+    {
+     "slot": "KEY_Char_Num",
+     "op": "=",
+     "offset": 0,
+     "val": 0
+    },
+    {
+     "slot": "KEY_Char_Num",
+     "op": "+",
+     "offset": 1,
+     "val": 0
+    },
+    {
+     "slot": "KEY_Char_Num",
+     "op": "+",
+     "offset": 2,
+     "val": 0
+    },
+    {
+     "slot": "KEY_Char_Num",
+     "op": "+",
+     "offset": 3,
+     "val": 1
+    }
+   ]
+  },
+  "KEY_MOUSE_WHEEL_SUB": {
+   "label": "KEY_MOUSE_WHEEL_SUB",
+   "writes": [
+    {
+     "slot": "KEY_Char_Num",
+     "op": "=",
+     "offset": 0,
+     "val": 0
+    },
+    {
+     "slot": "KEY_Char_Num",
+     "op": "+",
+     "offset": 1,
+     "val": 0
+    },
+    {
+     "slot": "KEY_Char_Num",
+     "op": "+",
+     "offset": 2,
+     "val": 0
+    },
+    {
+     "slot": "KEY_Char_Num",
+     "op": "+",
+     "offset": 3,
+     "val": 255
+    }
+   ]
+  },
+  "Ctrl_Mouse_wheel_Up": {
+   "label": "Ctrl_Mouse_wheel_Up",
+   "writes": [
+    {
+     "slot": "KEY_Char_Num",
+     "op": "=",
+     "offset": 0,
+     "val": 0
+    },
+    {
+     "slot": "KEY_Char_Num",
+     "op": "+",
+     "offset": 1,
+     "val": 0
+    },
+    {
+     "slot": "KEY_Char_Num",
+     "op": "+",
+     "offset": 2,
+     "val": 0
+    },
+    {
+     "slot": "KEY_Char_Num",
+     "op": "+",
+     "offset": 3,
+     "val": 1
+    },
+    {
+     "slot": "KEY_Char_Num",
+     "op": "-",
+     "offset": 1,
+     "val": 1
+    },
+    {
+     "slot": "KEY_Char_Num",
+     "op": "+",
+     "offset": 4,
+     "val": 1
+    }
+   ]
+  },
+  "Ctrl_Mouse_wheel_Down": {
+   "label": "Ctrl_Mouse_wheel_Down",
+   "writes": [
+    {
+     "slot": "KEY_Char_Num",
+     "op": "=",
+     "offset": 0,
+     "val": 0
+    },
+    {
+     "slot": "KEY_Char_Num",
+     "op": "+",
+     "offset": 1,
+     "val": 0
+    },
+    {
+     "slot": "KEY_Char_Num",
+     "op": "+",
+     "offset": 2,
+     "val": 0
+    },
+    {
+     "slot": "KEY_Char_Num",
+     "op": "+",
+     "offset": 3,
+     "val": 255
+    },
+    {
+     "slot": "KEY_Char_Num",
+     "op": "-",
+     "offset": 1,
+     "val": 1
+    },
+    {
+     "slot": "KEY_Char_Num",
+     "op": "+",
+     "offset": 4,
+     "val": 1
+    }
+   ]
+  },
+  "Shift_Mouse_wheel_Up": {
+   "label": "Shift_Mouse_wheel_Up",
+   "writes": [
+    {
+     "slot": "KEY_Char_Num",
+     "op": "=",
+     "offset": 0,
+     "val": 0
+    },
+    {
+     "slot": "KEY_Char_Num",
+     "op": "+",
+     "offset": 1,
+     "val": 0
+    },
+    {
+     "slot": "KEY_Char_Num",
+     "op": "+",
+     "offset": 2,
+     "val": 0
+    },
+    {
+     "slot": "KEY_Char_Num",
+     "op": "+",
+     "offset": 3,
+     "val": 1
+    },
+    {
+     "slot": "KEY_Char_Num",
+     "op": "-",
+     "offset": 1,
+     "val": 2
+    },
+    {
+     "slot": "KEY_Char_Num",
+     "op": "+",
+     "offset": 4,
+     "val": 2
+    }
+   ]
+  },
+  "Shift_Mouse_wheel_Down": {
+   "label": "Shift_Mouse_wheel_Down",
+   "writes": [
+    {
+     "slot": "KEY_Char_Num",
+     "op": "=",
+     "offset": 0,
+     "val": 0
+    },
+    {
+     "slot": "KEY_Char_Num",
+     "op": "+",
+     "offset": 1,
+     "val": 0
+    },
+    {
+     "slot": "KEY_Char_Num",
+     "op": "+",
+     "offset": 2,
+     "val": 0
+    },
+    {
+     "slot": "KEY_Char_Num",
+     "op": "+",
+     "offset": 3,
+     "val": 255
+    },
+    {
+     "slot": "KEY_Char_Num",
+     "op": "-",
+     "offset": 1,
+     "val": 2
+    },
+    {
+     "slot": "KEY_Char_Num",
+     "op": "+",
+     "offset": 4,
+     "val": 2
+    }
+   ]
+  },
+  "Alt_Mouse_wheel_Up": {
+   "label": "Alt_Mouse_wheel_Up",
+   "writes": [
+    {
+     "slot": "KEY_Char_Num",
+     "op": "=",
+     "offset": 0,
+     "val": 0
+    },
+    {
+     "slot": "KEY_Char_Num",
+     "op": "+",
+     "offset": 1,
+     "val": 0
+    },
+    {
+     "slot": "KEY_Char_Num",
+     "op": "+",
+     "offset": 2,
+     "val": 0
+    },
+    {
+     "slot": "KEY_Char_Num",
+     "op": "+",
+     "offset": 3,
+     "val": 1
+    },
+    {
+     "slot": "KEY_Char_Num",
+     "op": "-",
+     "offset": 1,
+     "val": 4
+    },
+    {
+     "slot": "KEY_Char_Num",
+     "op": "+",
+     "offset": 4,
+     "val": 4
+    }
+   ]
+  },
+  "Alt_Mouse_wheel_Down": {
+   "label": "Alt_Mouse_wheel_Down",
+   "writes": [
+    {
+     "slot": "KEY_Char_Num",
+     "op": "=",
+     "offset": 0,
+     "val": 0
+    },
+    {
+     "slot": "KEY_Char_Num",
+     "op": "+",
+     "offset": 1,
+     "val": 0
+    },
+    {
+     "slot": "KEY_Char_Num",
+     "op": "+",
+     "offset": 2,
+     "val": 0
+    },
+    {
+     "slot": "KEY_Char_Num",
+     "op": "+",
+     "offset": 3,
+     "val": 255
+    },
+    {
+     "slot": "KEY_Char_Num",
+     "op": "-",
+     "offset": 1,
+     "val": 4
+    },
+    {
+     "slot": "KEY_Char_Num",
+     "op": "+",
+     "offset": 4,
+     "val": 4
+    }
+   ]
+  }
+ }
+}

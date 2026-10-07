@@ -1,0 +1,8 @@
+# Teclado macro "MINI KeyBoard" (VID 0x1189) — acceso sin root.
+# Instalar:  sudo cp 99-macrokey.rules /etc/udev/rules.d/
+#            sudo udevadm control --reload && sudo udevadm trigger
+#
+# TAG+="uaccess" da acceso al usuario con sesión activa (systemd-logind), sin
+# depender de grupos. Si prefieres grupos, cambia MODE/GROUP por el tuyo
+# (en Fedora el grupo de acceso a dispositivos serie/USB suele ser "uucp").
+SUBSYSTEM=="hidraw", ATTRS{idVendor}=="1189", MODE="0660", GROUP="plugdev", TAG+="uaccess"

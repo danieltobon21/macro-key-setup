@@ -1,0 +1,17 @@
+# artefactos de compilación de Rust
+rust/target/
+# cachés de Python
+__pycache__/
+*.pyc
+
+# ---- NO se publica ----
+# binarios del fabricante y sus símbolos (sin licencia que permita redistribuir)
+vendor/
+*.exe
+*.dll
+*.pdb
+*.application
+*.manifest
+# código C# decompilado del binario del fabricante (obra derivada)
+re/decompiled/
+re/hidlibrary/

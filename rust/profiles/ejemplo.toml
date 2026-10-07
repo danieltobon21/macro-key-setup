@@ -1,0 +1,66 @@
+# Perfil de ejemplo para el teclado macro de 6 teclas + perilla.
+# Aplicar con:  macrokey apply /dev/hidrawN --profile profiles/ejemplo.toml
+#
+# Índices de tecla: 1..6 = teclas; la perilla es knob-left / knob-push / knob-right
+# (también se acepta el número crudo del firmware, p.ej. 13/14/15 o 16/17/18).
+#
+# Cada binding admite UNA de estas cuatro formas:
+#   codes = ["A"]              + mods = ["ctrl"]     -> combinación de teclado
+#   media = "play"                                   -> multimedia
+#   mouse = "wheelup"                                -> acción de ratón
+#   clear = true                                     -> dejar la tecla sin función
+#
+# 'codes' con varios elementos genera una secuencia (p.ej. un atajo tipo "hola"),
+# y 'delay_ms' el retardo entre elementos.
+
+name = "perfil-de-ejemplo"
+
+# LED del teclado (una sola entrada para todo el aparato)
+[led]
+layer = 1
+mode = 2      # 0..5
+color = "orange"
+
+# ------- teclas -------
+
+[[binding]]
+key = "1"
+codes = ["C"]
+mods = ["ctrl"]
+
+[[binding]]
+key = "2"
+codes = ["V"]
+mods = ["ctrl"]
+
+[[binding]]
+key = "3"
+codes = ["F5"]
+mods = ["shift"]
+
+[[binding]]
+key = "4"
+media = "mute"
+
+[[binding]]
+key = "5"
+mouse = "wheelup"
+
+[[binding]]
+key = "6"
+codes = ["H", "O", "L", "A"]
+delay_ms = 30
+
+# ------- perilla -------
+
+[[binding]]
+key = "knob-left"
+media = "prev"
+
+[[binding]]
+key = "knob-push"
+media = "play"
+
+[[binding]]
+key = "knob-right"
+media = "next"

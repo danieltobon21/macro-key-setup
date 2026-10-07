@@ -1,0 +1,17 @@
+[package]
+name = "macrokey"
+version = "0.1.0"
+edition = "2021"
+description = "Configurador libre para teclados macro HID VID 0x1189 (\"MINI KeyBoard\")"
+license = "MIT"
+
+[dependencies]
+clap = { version = "4", features = ["derive"] }
+serde = { version = "1", features = ["derive"] }
+toml = "0.8"
+
+[profile.release]
+opt-level = "z"
+lto = true
+strip = true
+panic = "abort"
