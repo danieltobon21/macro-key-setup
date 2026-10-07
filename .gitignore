@@ -15,3 +15,7 @@ vendor/
 # código C# decompilado del binario del fabricante (obra derivada)
 re/decompiled/
 re/hidlibrary/
+
+# render del mockup (se regenera)
+gui/mockup-render.html
+gui/vistas/interfaz-previa.png
