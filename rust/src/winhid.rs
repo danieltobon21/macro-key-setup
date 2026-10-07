@@ -21,10 +21,8 @@ use windows_sys::Win32::Devices::DeviceAndDriverInstallation::{
     SetupDiGetDeviceInterfaceDetailW, DIGCF_DEVICEINTERFACE, DIGCF_PRESENT,
     SP_DEVICE_INTERFACE_DATA, SP_DEVICE_INTERFACE_DETAIL_DATA_W, SP_DEVINFO_DATA,
 };
-use windows_sys::Win32::Devices::HumanInterfaceDevice::{HidD_GetHidGuid, HIDD_GetProductString, HidD_GetPreparsedData, HidD_FreePreparsedData, HidP_GetCaps, HIDP_CAPS};
-use windows_sys::Win32::Foundation::{
-    CloseHandle, GENERIC_READ, GENERIC_WRITE, HANDLE, INVALID_HANDLE_VALUE,
-};
+use windows_sys::Win32::Devices::HumanInterfaceDevice::{HidD_GetHidGuid, HidD_GetProductString, HidD_GetPreparsedData, HidD_FreePreparsedData, HidP_GetCaps, HIDP_CAPS};
+use windows_sys::Win32::Foundation::{CloseHandle, GENERIC_READ, GENERIC_WRITE, HANDLE, INVALID_HANDLE_VALUE};
 use windows_sys::Win32::Storage::FileSystem::{
     CreateFileW, WriteFile, FILE_ATTRIBUTE_NORMAL, FILE_SHARE_READ, FILE_SHARE_WRITE,
     OPEN_EXISTING,
@@ -88,7 +86,8 @@ pub fn enumerar(vid: u16) -> Vec<Info> {
             std::ptr::null_mut(),
             DIGCF_PRESENT | DIGCF_DEVICEINTERFACE,
         );
-        if hdev == INVALID_HANDLE_VALUE {
+        // HDEVINFO es isize: INVALID_HANDLE_VALUE se compara como -1
+        if hdev == -1 {
             return salida;
         }
         let mut i = 0u32;
@@ -167,7 +166,7 @@ fn nombre_producto(ruta: &str) -> (String, u8) {
             return (String::new(), 0);
         }
         let mut buf = [0u16; 128];
-        let ok = HIDD_GetProductString(h, buf.as_mut_ptr() as *mut c_void, (buf.len() * 2) as u32);
+        let ok = HidD_GetProductString(h, buf.as_mut_ptr() as *mut c_void, (buf.len() * 2) as u32);
         CloseHandle(h);
         if ok == 0 {
             return (String::new(), 0);
@@ -215,7 +214,8 @@ impl Salida {
             if handle == INVALID_HANDLE_VALUE {
                 return Err(format!("CreateFileW falló en {ruta}"));
             }
-            let mut preparsed: *mut c_void = std::ptr::null_mut();
+            // PHIDP_PREPARSED_DATA es un `isize` en windows-sys (no un puntero)
+            let mut preparsed: isize = 0;
             let mut out_len = 65usize;
             if HidD_GetPreparsedData(handle, &mut preparsed) != 0 {
                 let mut caps: HIDP_CAPS = std::mem::zeroed();

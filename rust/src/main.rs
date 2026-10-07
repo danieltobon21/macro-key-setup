@@ -7,6 +7,7 @@
 mod gui;
 mod hidraw;
 mod protocol;
+#[cfg(unix)]
 mod usbfs;
 #[cfg(windows)]
 mod winhid;
@@ -15,6 +16,7 @@ use clap::{Args, Parser, Subcommand};
 use hidraw::{Device, ReportKind, VID_OEM};
 use protocol::*;
 use std::process::ExitCode;
+#[cfg(unix)]
 use usbfs::UsbfsConfig;
 
 #[derive(Parser, Debug)]
@@ -155,6 +157,7 @@ struct Target {
 
 enum Transport {
     Hidraw(Device),
+    #[cfg(unix)]
     Usbfs(UsbfsConfig),
     /// Windows: API HID nativa. `None` = sólo dry-run (no hay aparato abierto).
     #[cfg(windows)]
@@ -169,6 +172,7 @@ impl Target {
             Transport::WinHid(Some(d)) => format!("{} (colección HID)", d.path().display()),
             #[cfg(windows)]
             Transport::WinHid(None) => "(sin aparato: dry-run)".to_string(),
+            #[cfg(unix)]
             Transport::Usbfs(c) => format!(
                 "{} (interfaz {}, EP 0x{:02x}, transferencias de {} B)",
                 c.path.display(),
@@ -182,6 +186,7 @@ impl Target {
     fn kind(&self) -> &'static str {
         match self.transport {
             Transport::Hidraw(_) => "hidraw",
+            #[cfg(unix)]
             Transport::Usbfs(_) => "usbfs",
             #[cfg(windows)]
             Transport::WinHid(_) => "hidapi",
@@ -198,6 +203,7 @@ fn target(da: &DeviceArgs, need_device: bool) -> Result<Target, String> {
     // y mi_00 en el resto.
     let cfg_iface: u8 = if proto_known == 0 { 1 } else { 0 };
 
+    #[cfg(unix)]
     let find_usbfs = || -> Option<UsbfsConfig> {
         if let Some(p) = pid {
             if let Some(c) = UsbfsConfig::find(VID_OEM, p, cfg_iface) {
@@ -297,6 +303,7 @@ fn target(da: &DeviceArgs, need_device: bool) -> Result<Target, String> {
                 .unwrap_or(if protocol == 1 { LONG_FRAME_LEN } else { SHORT_FRAME_LEN });
             (d.numbered_reports(), len)
         }
+        #[cfg(unix)]
         Transport::Usbfs(c) => (false, c.transfer_len),
         #[cfg(windows)]
         Transport::WinHid(Some(d)) => (true, d.out_len),
@@ -339,9 +346,15 @@ impl Target {
                 dev.write_report(self.numbered, self.report_id, data, self.out_len)
             }
             #[cfg(windows)]
-            Transport::WinHid(Some(dev)) => dev.escribir(self.report_id, data),
+            Transport::WinHid(Some(dev)) => dev
+                .escribir(self.report_id, data)
+                .map(|_| data.len())
+                .map_err(|e| std::io::Error::other(e)),
             #[cfg(windows)]
-            Transport::WinHid(None) => Err("no hay aparato abierto (dry-run)".into()),
+            Transport::WinHid(None) => Err(std::io::Error::other(
+                "no hay aparato abierto (dry-run)",
+            )),
+            #[cfg(unix)]
             Transport::Usbfs(cfg) => {
                 if !cfg.is_open() {
                     cfg.open()
@@ -483,6 +496,17 @@ fn cmd_info(da: DeviceArgs) -> Result<(), String> {
             let hex: Vec<String> = desc.iter().take(48).map(|b| format!("{b:02x}")).collect();
             println!("descriptor: {} ... ({} bytes)", hex.join(" "), desc.len());
         }
+        #[cfg(windows)]
+        Transport::WinHid(d) => match d {
+            Some(dev) => println!(
+                "colección HID de configuración: {}\n(en Windows se escribe por la API HID: \
+                 informe de {} B con el report id delante)",
+                dev.path().display(),
+                dev.out_len
+            ),
+            None => println!("(sin aparato: dry-run)"),
+        },
+        #[cfg(unix)]
         Transport::Usbfs(c) => {
             println!(
                 "canal de configuración: interfaz {} (HID vendor-defined, Report ID 3), \
@@ -506,7 +530,7 @@ fn cmd_probe(da: DeviceArgs) -> Result<(), String> {
         t.kind(),
         t.protocol
     );
-    if t.kind() == "usbfs" {
+    if t.kind() == "usbfs" || t.kind() == "hidapi" {
         println!("el descriptor de la interfaz de configuración declara Report ID 3");
         t.send(&[0u8; 8], da.dry_run, "sondeo (trama de ceros)")?;
         return Ok(());
@@ -514,6 +538,9 @@ fn cmd_probe(da: DeviceArgs) -> Result<(), String> {
     let mut ok = Vec::new();
     let reps = match &t.transport {
         Transport::Hidraw(d) => d.reports(),
+        #[cfg(windows)]
+        Transport::WinHid(_) => Default::default(),
+        #[cfg(unix)]
         Transport::Usbfs(_) => Default::default(),
     };
     for rid in [3u8, 0, 2] {
@@ -538,6 +565,11 @@ fn cmd_probe(da: DeviceArgs) -> Result<(), String> {
                     Err(e) => println!("  report id {rid}: error {e}"),
                 }
             }
+            #[cfg(windows)]
+            Transport::WinHid(_) => {
+                println!("  report id {rid}: (en Windows se escribe con el id detectado)")
+            }
+            #[cfg(unix)]
             Transport::Usbfs(_) => {}
         }
     }

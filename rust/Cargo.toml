@@ -27,6 +27,9 @@ windows-sys = { version = "0.59", features = [
     "Win32_Devices_DeviceAndDriverInstallation",
     "Win32_Devices_HumanInterfaceDevice",
     "Win32_Storage_FileSystem",
+    # CreateFileW/WriteFile arrastran estos dos modulos en su firma
+    "Win32_Security",
+    "Win32_System_IO",
 ] }
 
 # Sólo en Windows: incrusta el icono en el .exe (necesita rc.exe o windres)
