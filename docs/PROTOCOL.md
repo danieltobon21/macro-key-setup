@@ -258,14 +258,30 @@ escriben varios bits.)
 
 ### 6.4 Ratón (`MouseKey`) — 4 bytes
 
-```
+```bash
 byte 0 : botones  (1 = izquierdo, 2 = derecho, 4 = central)
 byte 1 : desplazamiento X (con signo)
 byte 2 : desplazamiento Y (con signo)
 byte 3 : rueda     (0x01 = arriba, 0xFF = abajo)
 ```
+
 Con modificador (Ctrl/Shift/Alt + rueda) se escribe además la máscara de §6.2
 en el byte de máscara del elemento.
+
+**Posición de cada campo en la trama corta** (verificado contra hardware, ver §9):
+
+| byte de la trama | campo | prueba |
+|---|---|---|
+| `[2]` | botones | `05 13 04 00 …` → el aparato emite `04 00 00 00` (botón central) |
+| `[3]` | X | `05 13 00 04 …` → `00 04 00 00` |
+| `[4]` | Y | `06 13 00 00 04 …` → `00 00 04 00` |
+| `[5]` | rueda | `05 13 00 00 00 04 …` → `00 00 00 04` |
+| `[6]` | máscara de modificadores | — |
+
+Comportamiento medido: **el botón permanece pulsado mientras se mantiene la tecla
+física** (tecla 5 mantenida 3 s → el informe del botón central aguantó de
+`17:04:05` a `17:04:08`). Por eso sirve para pan/rotate (arrastrar) y no solo
+para un clic suelto.
 
 ### 6.5 LED (`LEDkey`)
 
@@ -317,3 +333,66 @@ Mejoras que justifican reescribirlo (además de la seguridad):
 2. **Perfiles** en fichero (TOML/YAML) + backup/restore + `macro-key apply perfil.toml`.
 3. Interfaz moderna (TUI/GUI) y CLI scriptable.
 4. Mapa de códigos legible (HID) en vez de números crudos.
+
+---
+
+## 9. Verificación contra hardware (2026-10-07)
+
+Todo lo anterior es la reconstrucción desde el binario. Esto es lo que se ha
+**medido** con el aparato real conectado (VID:PID `1189:8890`, firmware con
+`report id 3`), leyendo sus informes de entrada por `/dev/hidraw`.
+
+### 9.1 Qué interfaz emite cada cosa
+
+| interfaz | nodo medido | descriptor | ejemplo real |
+|---|---|---|---|
+| 0 | `hidraw7` | teclado, report **ID 1**, 9 bytes | `01 01 00 06` = Ctrl+C (mods=01, tecla C) |
+| 2 | `hidraw8` | teclado (report ID 1) + **Consumer, report ID 2, 2 bytes** | `02 e9 00` = volumen + |
+| 3 | `hidraw9` | ratón, **sin report ID**, 4 bytes | `04 00 00 00` = botón central |
+
+La interfaz 1 (canal de configuración) **no tiene endpoint IN**, así que no
+aparece como `/dev/hidraw`: hay que escribirla por `usbfs` (§1.1).
+
+### 9.2 Regla de oro: nunca un elemento "solo modificador"
+
+El firmware interpreta un elemento `(máscara ≠ 0, código = 0)` como **mantener
+ese modificador indefinidamente** — es exactamente lo que hace la página
+Ctrl/Shift/Alt del original. Medido: al escribir la combinación con `buf[4]`
+copiado al marco 0 (como hace el bucle del fabricante), **el Ctrl se quedaba
+pegado**: el siguiente Escape del propio teclado salía como Ctrl+Esc
+(`01 00 00 29`) y ningún informe posterior soltaba el modificador.
+
+Por eso el **marco 0 va siempre a cero** y los elementos empiezan en el índice 1.
+Las tres variantes que funcionaron en hardware (Ctrl+C en la tecla 1):
+
+| variante | tramas enviadas | resultado |
+|---|---|---|
+| A | `01 11 01 00 01 06 00 00` | ✓ Ctrl+C |
+| B | `01 11 01 00 01 06 00 00` + `01 11 01 01 00 00 00 00` | ✓ Ctrl+C |
+| C (la implementada) | `01 11 01 00 00 00 00 00` + `01 11 01 01 01 06 00 00` | ✓ Ctrl+C |
+
+El modificador pegado **no se limpia** reescribiendo otra tecla: hay que
+desenchufar y volver a enchufar el aparato (el estado es de ejecución, no flash).
+
+### 9.3 Perilla: índices, direcciones y repetición
+
+* `13` = girar a la izquierda (antihorario), `14` = pulsar, `15` = girar a la derecha.
+* Cada **clic de detente** emite ~4 informes Consumer (medido: 17 informes en
+  ~3 s), así que un clic sube/baja el volumen varios pasos. Es del firmware, no
+  de la configuración.
+* Los códigos de §6.3 se obedecen literalmente: `0xEA` (vol−) en el índice 13
+  baja el volumen, `0xE9` en el 15 lo sube, `0xCD` al pulsar hace play/pausa.
+
+### 9.4 Herramientas de medida
+
+* `proto/macrokey.py monitor --all --seconds N` — lee los informes de entrada de
+  todas las interfaces, con marca de tiempo y decodificados;
+  **re-escanea cada 0,5 s**, así que sobrevive a desenchufar/reconectar el aparato
+  (los nodos `hidraw` cambian de número).
+* `tools/comparar-tramas.py` — comprueba byte a byte que el prototipo Python y la
+  app Rust construyen las mismas tramas (20 casos: teclado, secuencias, ratón,
+  rueda, multimedia, perilla, borrado y retardos).
+* Truco útil: dejar una tecla **sin modificador** (p. ej. Escape) y usarla de
+  *detector* — si su informe llega con la máscara a cero, ninguna variante
+  probada deja modificadores pegados.
+

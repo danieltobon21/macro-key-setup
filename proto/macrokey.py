@@ -399,11 +399,16 @@ def build_vendor_buffer(key_type: int, entries: list[tuple[str, bytes]],
     """
     buf = bytearray(64)   # `Data_Send_Buff` (convención del original)
     buf[1] = key_type
-    cursor = 5
+    # OJO con el orden del par: el firmware lee cada elemento como
+    # (MÁSCARA, CÓDIGO) — igual que el original cuando en el GUI pulsas primero el
+    # modificador (que escribe en buf[KEY_Char_Num] con el cursor aún sin avanzar).
+    # Con el orden invertido la tecla sale sin el modificador (p.ej. "c" en lugar
+    # de Ctrl+C), que es justo el fallo que vimos en hardware.
+    cursor = 4
     for kind, pay in entries:
         if kind == "key":
-            buf[cursor] = pay[0]
-            buf[cursor + 1] |= pay[1] if len(pay) > 1 else 0
+            buf[cursor] |= pay[1] if len(pay) > 1 else 0    # máscara
+            buf[cursor + 1] = pay[0]                        # código HID
             cursor += 2
         elif kind == "media":
             pos = 4 if (new_mul_mouse and report_id != 2) else 5
@@ -481,7 +486,14 @@ def build_short_frames(key_index: int, layer: int, key_type: int,
         count = buf[2]
         for b in range(count + 1):                    # el original itera 0..count
             if b == 0:
-                a, c = buf[4], 0                      # caso 0: buf[4] y 0
+                # El marco 0 va SIEMPRE a cero. Si se copia aquí la máscara
+                # (buf[4]) y se deja el código a 0, el elemento es un
+                # "modificador sin tecla" — que el firmware interpreta como
+                # MANTENER ese modificador indefinidamente (es la página
+                # Ctrl/Shift/Alt del original, T1074). Resultado real medido en
+                # hardware: el Ctrl se quedaba pegado y la tecla de Escape salía
+                # como Ctrl+Esc. Por eso aquí va (0, 0).
+                a, c = 0, 0
             else:
                 # caso n>=1: buf[2n+2], buf[2n+3]  (b=1 -> buf[4],buf[5];
                 # b=2 -> buf[6],buf[7]; b=3 -> buf[8],buf[9]; ...)
@@ -858,6 +870,136 @@ def cmd_apply(args):
     return 0
 
 
+KEY_NAMES = {v: k for k, v in HID_KEYS.items()}
+
+
+def _consumer_name(code: int) -> str:
+    """Nombre de los códigos Consumer más habituales en teclados multimedia."""
+    known = {
+        0x00CD: "play/pausa", 0x00B5: "siguiente", 0x00B6: "anterior",
+        0x00E2: "mute", 0x00E9: "volumen +", 0x00EA: "volumen -",
+        0x0183: "abrir reproductor", 0x0192: "calculadora", 0x0221: "navegador",
+        0x0223: "inicio", 0x0224: "atrás", 0x0225: "adelante",
+        0x0226: "parar", 0x0227: "recargar", 0x0221: "web",
+        0x018A: "correo", 0x0194: "mi equipo",
+    }
+    return known.get(code, "")
+
+
+def _decode_report(data: bytes, iface, node: str) -> str:
+    """Interpretación best-effort de un informe de entrada del aparato."""
+    parts = []
+    if iface == 3 or (len(data) >= 4 and iface is None and data[0] in (0, 1, 2, 3, 4, 5, 6, 7)):
+        buttons = data[0]
+        names = [n for b, n in ((1, "izq"), (2, "der"), (4, "central")) if buttons & b]
+        parts.append(f"ratón: botones=0x{buttons:02x}"
+                     + (f" ({'+'.join(names)})" if names else "")
+                     + f" dx={data[1] - 256 if data[1] > 127 else data[1]}"
+                     + f" dy={data[2] - 256 if data[2] > 127 else data[2]}"
+                     + f" rueda={data[3] - 256 if data[3] > 127 else data[3]}")
+    if len(data) == 3 and data[0] == 2:
+        # informe de la página Consumer: [report id 2][código 16 bits little-endian]
+        code = int.from_bytes(data[1:3], "little")
+        name = _consumer_name(code)
+        parts.append(f"consumer: 0x{code:04x}" + (f" ({name})" if name else " (¿?)"))
+    elif len(data) >= 8:
+        mods = data[0]
+        mnames = [n for b, n in ((0x01, "Ctrl"), (0x02, "Shift"), (0x04, "Alt"),
+                                 (0x08, "Win"), (0x10, "RCtrl"), (0x20, "RShift"),
+                                 (0x40, "RAlt"), (0x80, "RWin")) if mods & b]
+        keys = [KEY_NAMES.get(k, f"0x{k:02x}") for k in data[2:8] if k]
+        if mods or keys:
+            parts.append("teclado: " + (f"mods={mods:02x} ({'+'.join(mnames)}) " if mods else "")
+                         + f"teclas={keys}")
+    if not parts:
+        code = int.from_bytes(data[:2], "little")
+        if code:
+            parts.append(f"posible Consumer: 0x{code:04x}")
+    return "; ".join(parts) or "(sin interpretación)"
+
+
+def cmd_monitor(args):
+    """Lee los informes de ENTRADA del teclado (para ver qué emite cada tecla).
+
+    Re-escanea las interfaces cada 0,5 s: si el aparato se desenchufa y se vuelve a
+    enchufar (los nodos hidraw cambian de número), el monitor los vuelve a abrir solo.
+    """
+    import select
+    import time
+
+    def scan():
+        if args.all:
+            devs = [HidrawDevice(f"/dev/{p.name}") for p in sorted(
+                Path("/sys/class/hidraw").glob("hidraw*"), key=lambda x: int(x.name[6:]))]
+        else:
+            devs = enumerate_oem_devices()
+            if args.device:
+                devs = [d for d in devs if args.device in d.name or args.device in str(d.path)]
+        return {str(d.path): d for d in devs}
+
+    fds = {}                     # ruta -> descriptor abierto
+    devmap = {}                  # ruta -> HidrawDevice
+    opened = []
+
+    def refresh():
+        cur = scan()
+        for path in list(fds):
+            if path not in cur:
+                try:
+                    os.close(fds.pop(path))
+                except OSError:
+                    pass
+                devmap.pop(path, None)
+                print(f"(-) {Path(path).name}: ya no está", flush=True)
+        for path, d in cur.items():
+            devmap[path] = d
+            if path in fds:
+                continue
+            try:
+                fds[path] = os.open(d.path, os.O_RDONLY | os.O_NONBLOCK)
+                opened.append(path)
+                print(f"(+) abierto {Path(path).name} (interfaz {d.usb_iface})", flush=True)
+            except OSError as e:
+                print(f"(no puedo abrir {d.path}: {e})", flush=True)
+
+    refresh()
+    if not fds:
+        raise SystemExit("no encuentro los nodos del teclado (¿conectado? ¿permisos?)")
+    print(f"monitorizando {len(fds)} interfaces durante {args.seconds} s "
+          f"(re-escaneo automático cada 0,5 s)", flush=True)
+    print("pulsa ahora las teclas del macro\n", flush=True)
+    deadline = time.time() + args.seconds
+    try:
+        while time.time() < deadline:
+            fd_to_path = {fd: path for path, fd in fds.items()}
+            ready, _, _ = select.select(list(fds.values()), [], [], 0.5)
+            for fd in ready:
+                try:
+                    data = os.read(fd, 64)
+                except (BlockingIOError, OSError):
+                    continue
+                if not data:
+                    continue
+                path = fd_to_path.get(fd)
+                if path is None:
+                    continue
+                d = devmap.get(path)
+                iface = d.usb_iface if d else None
+                hexs = data.hex(" ")
+                t0 = time.strftime("%H:%M:%S")
+                print(f"{t0} [{Path(path).name} if{iface}] {hexs:<47} | "
+                      f"{_decode_report(data, iface, Path(path).name)}", flush=True)
+            refresh()
+    except KeyboardInterrupt:
+        pass
+    finally:
+        for fd in fds.values():
+            os.close(fd)
+    print("\nfin del monitor")
+    return 0
+
+
+
 def resolve_key(name: str, new_mul_mouse: int = 0) -> int:
     n = str(name).strip().lower()
     if n.isdigit():
@@ -971,6 +1113,7 @@ def main(argv=None):
     fr.add_argument("--media", choices=sorted(MEDIA))
     fr.add_argument("--mouse", choices=["left", "right", "middle", "wheelup", "wheeldown"])
     fr.add_argument("--delay", type=int, default=0)
+    fr.add_argument("--clear", action="store_true", help="tecla sin función (tipo 0)")
     fr.add_argument("--protocol", type=int, choices=[0, 1], default=1)
     fr.add_argument("--report-id", type=int, default=3)
     fr.add_argument("--new-mul-mouse", type=int, choices=[0, 1], default=0)
@@ -981,6 +1124,12 @@ def main(argv=None):
 
     ap_apply = add("apply", cmd_apply)
     ap_apply.add_argument("--profile", required=True, help="fichero de perfil TOML")
+
+    mon = sub.add_parser("monitor", help="ver los informes de entrada: qué emite cada tecla")
+    mon.add_argument("device", nargs="?", default=None)
+    mon.add_argument("--seconds", type=int, default=120)
+    mon.add_argument("--all", action="store_true", help="escuchar TODOS los /dev/hidraw")
+    mon.set_defaults(func=cmd_monitor)
 
     k = add("key", cmd_key)
     k.add_argument("--key", required=True,

@@ -19,8 +19,10 @@ recuperado es prácticamente el original).
 | `re/tables/` | tablas de códigos extraídas automáticamente (`keytables.json` / `.md`) |
 | `re/tools/extract_tables.py` | el extractor (regenera las tablas desde el C#) |
 | `proto/macrokey.py` | prototipo funcional en Python (sin dependencias, `/dev/hidraw` directo) |
+| `tools/comparar-tramas.py` | comparación byte a byte de las tramas Python vs Rust (regresión del protocolo) |
+| `profiles/` | perfiles TOML (`tinkercad.toml` = el del taller) |
 | `udev/99-macrokey.rules` | regla udev para usar el aparato sin `sudo` |
-| `rust/` | aplicación final en Rust (en construcción) |
+| `rust/` | aplicación final en Rust (binario único, sin dependencias C) |
 
 ## Estado
 
@@ -33,6 +35,15 @@ recuperado es prácticamente el original).
 - [x] **Validado en hardware**: el teclado del taller (VID:PID `1189:8890`) se
       configura desde Linux por USB directo (su canal de configuración no tiene
       nodo `/dev/hidraw`). Ver §1.1 de `docs/PROTOCOL.md`.
+- [x] **Configuración final funcionando en el teclado** (medido, §9 de
+      `docs/PROTOCOL.md`): teclas 1-4 = Ctrl+C / Ctrl+V / Ctrl+X / Esc (sin
+      modificadores pegados), teclas 5-6 = botón central y derecho del ratón
+      **manteniéndose mientras se mantiene la tecla** (pan/rotate), perilla =
+      volumen −, play/pausa, volumen +. Es portátil: al ser HID estándar
+      funciona igual en Windows, sin software del fabricante.
+- [x] **Herramientas de medida**: `monitor` (informes de entrada decodificados,
+      con marca de tiempo y re-escaneo) y `tools/comparar-tramas.py`
+      (20/20 tramas idénticas entre el prototipo Python y la app Rust).
 - [ ] `dump`/backup de la config actual del teclado (si el firmware lo permite).
 - [ ] GUI (solo si el CLI se queda corto).
 

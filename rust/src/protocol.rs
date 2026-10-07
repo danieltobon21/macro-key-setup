@@ -207,26 +207,26 @@ pub enum Step {
 }
 
 /// Construye el `Data_Send_Buff` de 65 bytes replicando **exactamente** lo que
-/// hace la app del fabricante (cursor `KEY_Char_Num` empezando en 5):
+/// hace la app del fabricante.
 ///
-/// * un elemento de teclado ocupa `buf[cursor]` = código y `buf[cursor+1]` = máscara
-///   (la máscara se escribe con `|=`, por eso el tabulador del original), y el
-///   cursor avanza de 2 en 2;
-/// * ratón y multimedia escriben en `buf[cursor..]` y no avanzan el cursor
-///   (son acciones finales);
+/// Cada elemento de teclado ocupa dos bytes consecutivos a partir del índice 4,
+/// y el firmware los lee como **(máscara, código)**: así es como el original deja
+/// el buffer cuando en el GUI pulsas primero el modificador (que escribe con el
+/// cursor todavía sin avanzar). Con el orden invertido el aparato escribe la letra
+/// **sin** el modificador.
+///
+/// * ratón y multimedia escriben en `buf[5..]` y no avanzan el cursor;
 /// * el contador (`buf[2]`) es el que calcula el original: recorre pares desde
 ///   `buf[4]` y se queda con el último par no nulo.
-///
-/// Estas posiciones se copian luego literales a la trama (ver `long_frame`).
 fn build_buffer(key_type: u8, steps: &[Step], nmm: bool, report_id: u8) -> Vec<u8> {
     let mut b = vec![0u8; 64];
     b[1] = key_type;
-    let mut cursor = 5usize;
+    let mut cursor = 4usize;
     for s in steps.iter().take(18) {
         match *s {
             Step::Key { code, mods } => {
-                b[cursor] = code;
-                b[cursor + 1] |= mods;
+                b[cursor] |= mods;
+                b[cursor + 1] = code;
                 cursor += 2;
             }
             Step::Mouse {
@@ -300,8 +300,13 @@ pub fn long_frame(
     d
 }
 
-/// Tramas cortas (protocolo 0): una escritura por elemento, 8 bytes cada una.
-/// Reproduce el `switch (b)` del original (los índices 0 y 1 comparten `buf[4]`).
+/// Tramas cortas (protocolo 0), replicando el `switch` por tipo del original.
+///
+/// Cada tipo usa posiciones **distintas** del buffer (verificado contra hardware):
+/// * teclado (0/1): `[2]`=nº de elementos, `[3]`=índice, `[4..5]`=(máscara, código)
+/// * multimedia (2): `[2]`=código bajo, `[3]`=código alto
+/// * ratón (3):     `[2]`=botones, `[3]`=dx, `[4]`=dy, `[5]`=rueda, `[6]`=modificadores
+/// * LED (8):       `[2]`=(color<<4)|modo
 pub fn short_frames(
     index: u8,
     layer: u8,
@@ -311,29 +316,58 @@ pub fn short_frames(
     nmm: bool,
 ) -> Vec<Vec<u8>> {
     let buf = build_buffer(key_type, steps, nmm, report_id);
-    let count = buf[2].max(1);
+    let t = key_type & 0x0F;
     let mut out = Vec::new();
-    for b in 0..=count as usize {
+
+    let head = |idx: u8| {
         let mut d = vec![0u8; SHORT_FRAME_LEN];
-        d[0] = index;
+        d[0] = idx;
         d[1] = if report_id == 0 {
             key_type & 0x0F
         } else {
             (layer << 4) | (key_type & 0x0F)
         };
-        d[2] = count;
-        d[3] = b as u8;
-        match b {
-            0 => {
-                d[4] = buf[4];
+        d
+    };
+
+    if t == 0 || t == 1 {
+        let count = buf[2];
+        for b in 0..=count as usize {
+            let mut d = head(index);
+            d[2] = count;
+            d[3] = b as u8;
+            if b == 0 {
+                // El marco 0 va SIEMPRE a cero. Si se copia aquí la máscara
+                // (`buf[4]`) con el código a 0, el elemento es un "modificador
+                // sin tecla" que el firmware mantiene pulsado indefinidamente
+                // (es la página Ctrl/Shift/Alt del original). Medido en
+                // hardware: el Ctrl se quedaba pegado y Escape salía como
+                // Ctrl+Esc.
+                d[4] = 0;
                 d[5] = 0;
+            } else {
+                // caso n>=1: buf[2n+2], buf[2n+3]
+                d[4] = buf[2 * b + 2];
+                d[5] = buf[2 * b + 3];
             }
-            // caso n>=1: buf[2n+2], buf[2n+3]
-            n => {
-                d[4] = buf[2 * n + 2];
-                d[5] = buf[2 * n + 3];
-            }
+            out.push(d);
         }
+    } else if t == 2 {
+        let mut d = head(index);
+        d[2] = buf[5];
+        d[3] = buf[6];
+        out.push(d);
+    } else if t == 8 {
+        let mut d = head(KEY_LED_INDEX);
+        d[2] = buf[2];
+        out.push(d);
+    } else if t == 3 {
+        let mut d = head(index);
+        d[2] = buf[5]; // botones (1=izq, 2=der, 4=central)
+        d[3] = buf[6]; // dx
+        d[4] = buf[7]; // dy
+        d[5] = buf[8]; // rueda
+        d[6] = buf[9]; // modificadores
         out.push(d);
     }
     out
