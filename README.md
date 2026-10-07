@@ -26,11 +26,13 @@ recuperado es prácticamente el original).
 
 - [x] Identificación del aparato, del software y auditoría de seguridad.
 - [x] Decompilación completa y documentación del protocolo (tramas, tipos, códigos).
-- [x] Prototipo Python (`proto/macrokey.py`) listo para hablar con el aparato.
-- [x] **App en Rust** (`rust/`): compila sin avisos, con `list`, `info`, `probe`,
-      `key`, `led`, `commit`, `apply <perfil.toml>`, `raw` y `--dry-run`. Las tramas
-      que genera son **idénticas byte a byte** a las del prototipo Python.
-- [ ] **Validación con el hardware conectado** (pendiente: enchufar el teclado).
+- [x] Prototipo Python (`proto/macrokey.py`) con transporte **hidraw y usbfs**.
+- [x] **App en Rust** (`rust/`): compila sin avisos, `list`, `info`, `probe`,
+      `key`, `led`, `commit`, `apply <perfil.toml>`, `raw`, `--dry-run` y
+      `--transport auto|hidraw|usbfs`. Tramas idénticas byte a byte al prototipo.
+- [x] **Validado en hardware**: el teclado del taller (VID:PID `1189:8890`) se
+      configura desde Linux por USB directo (su canal de configuración no tiene
+      nodo `/dev/hidraw`). Ver §1.1 de `docs/PROTOCOL.md`.
 - [ ] `dump`/backup de la config actual del teclado (si el firmware lo permite).
 - [ ] GUI (solo si el CLI se queda corto).
 
@@ -40,13 +42,21 @@ recuperado es prácticamente el original).
 cd rust
 cargo build --release                 # binario único, sin dependencias C
 ./target/release/macrokey list
-./target/release/macrokey key /dev/hidraw3 --key 1 --codes C --mods ctrl
-./target/release/macrokey apply /dev/hidraw3 --profile profiles/ejemplo.toml
-./target/release/macrokey key --dry-run --key 1 --codes A --mods ctrl   # sin hardware
+./target/release/macrokey info        # sin root: no abre el aparato
+sudo ./target/release/macrokey apply --profile ../profiles/tinkercad.toml
+sudo ./target/release/macrokey key --key 1 --codes C --mods ctrl
+./target/release/macrokey apply --dry-run --profile ../profiles/tinkercad.toml
 ```
 
 `--dry-run` imprime las tramas en hex, así que se puede revisar todo antes de
-escribir en la flash del teclado.
+escribir en la flash del teclado. `--transport auto` elige hidraw o USB directo
+según el modelo; solo hace falta forzarlo si hay rarezas.
+
+### Perfiles
+
+En `profiles/` están las configuraciones en TOML (`tinkercad.toml` es la del
+taller: copiar/pegar/cortar, escape, pan/rotar de Tinkercad y la perilla para
+volumen y play/pausa).
 
 ## Uso del prototipo
 

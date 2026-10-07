@@ -6,11 +6,13 @@
 
 mod hidraw;
 mod protocol;
+mod usbfs;
 
 use clap::{Args, Parser, Subcommand};
 use hidraw::{Device, ReportKind, VID_OEM};
 use protocol::*;
 use std::process::ExitCode;
+use usbfs::UsbfsConfig;
 
 #[derive(Parser, Debug)]
 #[command(
@@ -34,6 +36,9 @@ struct DeviceArgs {
     /// forzar el protocolo (0 = trama corta, 1 = trama larga)
     #[arg(long, global = true, value_parser = clap::value_parser!(u8).range(0..=1))]
     protocol: Option<u8>,
+    /// transporte: auto (por defecto), hidraw (/dev/hidrawN) o usbfs (USB directo)
+    #[arg(long, global = true, value_parser = ["auto", "hidraw", "usbfs"], default_value = "auto")]
+    transport: String,
     /// no escribir nada: solo mostrar las tramas que se enviarían
     #[arg(long, global = true)]
     dry_run: bool,
@@ -124,7 +129,8 @@ struct RawArgs {
 // ------------------------------------------------------------------ helpers
 
 struct Target {
-    dev: Device,
+    transport: Transport,
+    pid: u16,
     protocol: u8,
     new_mul_mouse: bool,
     report_id: u8,
@@ -132,79 +138,137 @@ struct Target {
     out_len: usize,
 }
 
+enum Transport {
+    Hidraw(Device),
+    Usbfs(UsbfsConfig),
+}
+
+impl Target {
+    fn where_(&self) -> String {
+        match &self.transport {
+            Transport::Hidraw(d) => d.path.display().to_string(),
+            Transport::Usbfs(c) => format!(
+                "{} (interfaz {}, EP 0x{:02x}, transferencias de {} B)",
+                c.path.display(),
+                c.interface,
+                c.endpoint,
+                c.transfer_len
+            ),
+        }
+    }
+
+    fn kind(&self) -> &'static str {
+        match self.transport {
+            Transport::Hidraw(_) => "hidraw",
+            Transport::Usbfs(_) => "usbfs",
+        }
+    }
+}
+
 fn target(da: &DeviceArgs, need_device: bool) -> Result<Target, String> {
-    let dev = match &da.device {
-        Some(p) => Device::by_path(VID_OEM, p).map_err(|e| e.to_string())?,
-        None => {
-            let all = Device::discover(VID_OEM).map_err(|e| e.to_string())?;
-            match all.len() {
-                0 => {
-                    if da.dry_run {
-                        // Simulamos un aparato para poder previsualizar tramas sin
-                        // tener el teclado conectado.
-                        Device {
-                            node: "dryrun".into(),
-                            path: std::path::PathBuf::from("/dev/null"),
-                            vid: VID_OEM,
-                            pid: 0x8830,
-                            interface: Some(0),
-                            product: "(dry-run)".into(),
-                            serial: String::new(),
-                            manufacturer: String::new(),
-                        }
-                    } else {
-                        return Err(format!(
-                            "no hay ningún dispositivo HID con VID 0x{VID_OEM:04x}. \
-                             Conecta el teclado (comprueba `lsusb | grep -i 1189`)."
-                        ));
-                    }
+    let devs = Device::discover(VID_OEM).map_err(|e| e.to_string())?;
+    let pid = devs.first().map(|d| d.pid);
+    let (proto_known, nmm) = pid.and_then(hidraw::known_pid).unwrap_or((1, false));
+    let protocol = da.protocol.unwrap_or(proto_known);
+    // La interfaz de configuración es mi_01 en los modelos de protocolo 0 (0x8890)
+    // y mi_00 en el resto.
+    let cfg_iface: u8 = if proto_known == 0 { 1 } else { 0 };
+
+    let find_usbfs = || -> Option<UsbfsConfig> {
+        if let Some(p) = pid {
+            if let Some(c) = UsbfsConfig::find(VID_OEM, p, cfg_iface) {
+                return Some(c);
+            }
+        }
+        for k in hidraw::KNOWN_PIDS {
+            let iface = if k.1 == 0 { 1 } else { 0 };
+            if let Some(c) = UsbfsConfig::find(VID_OEM, k.0, iface) {
+                return Some(c);
+            }
+        }
+        None
+    };
+
+    // 1) nodo hidraw indicado a mano
+    let transport = if let Some(p) = &da.device {
+        Transport::Hidraw(Device::by_path(VID_OEM, p).map_err(|e| e.to_string())?)
+    } else if da.transport != "usbfs" {
+        match devs.iter().find(|d| d.interface == Some(cfg_iface)) {
+            Some(d) => Transport::Hidraw(d.clone()),
+            None => {
+                if da.transport == "hidraw" {
+                    return Err(
+                        "este modelo no expone el canal de configuración como /dev/hidraw; \
+                         usa --transport usbfs (USB directo)"
+                            .into(),
+                    );
                 }
-                1 => all.into_iter().next().unwrap(),
-                _ => {
-                    if need_device {
-                        return Err("hay varias interfaces: indica cuál (/dev/hidrawN)".into());
+                match find_usbfs() {
+                    Some(c) => Transport::Usbfs(c),
+                    None if da.dry_run => Transport::Hidraw(Device {
+                        node: "dryrun".into(),
+                        path: std::path::PathBuf::from("/dev/null"),
+                        vid: VID_OEM,
+                        pid: 0x8830,
+                        interface: Some(0),
+                        product: "(dry-run)".into(),
+                        serial: String::new(),
+                        manufacturer: String::new(),
+                    }),
+                    None => {
+                        return Err(format!(
+                            "no encuentro el teclado (VID 0x{VID_OEM:04x}). \
+                             Conecta el aparato y comprueba `lsusb | grep -i 1189`."
+                        ))
                     }
-                    all.into_iter().next().unwrap()
                 }
             }
         }
+    } else {
+        match find_usbfs() {
+            Some(c) => Transport::Usbfs(c),
+            None if da.dry_run => Transport::Hidraw(Device {
+                node: "dryrun".into(),
+                path: std::path::PathBuf::from("/dev/null"),
+                vid: VID_OEM,
+                pid: 0x8830,
+                interface: Some(0),
+                product: "(dry-run)".into(),
+                serial: String::new(),
+                manufacturer: String::new(),
+            }),
+            None => return Err("no encuentro la interfaz de configuración por USB".into()),
+        }
     };
-    let (proto, nmm) = hidraw::known_pid(dev.pid).unwrap_or((1, false));
-    let protocol = da.protocol.unwrap_or(proto);
-    let reports = dev.reports();
-    let numbered = dev.numbered_reports();
-    let out_len_for = |rid: u8| -> usize {
-        reports
-            .get(&(ReportKind::Output, rid))
-            .or_else(|| reports.get(&(ReportKind::Output, 0)))
-            .copied()
-            .unwrap_or(if protocol == 1 { LONG_FRAME_LEN } else { SHORT_FRAME_LEN })
+
+    let transport = transport;
+
+    let (numbered, out_len) = match &transport {
+        Transport::Hidraw(d) => {
+            if need_device && devs.len() > 1 && da.device.is_none() && d.interface != Some(cfg_iface) {
+                return Err("hay varias interfaces: indica cuál (/dev/hidrawN)".into());
+            }
+            let reports = d.reports();
+            let len = reports
+                .get(&(ReportKind::Output, da.report_id.unwrap_or(3)))
+                .or_else(|| reports.get(&(ReportKind::Output, 0)))
+                .copied()
+                .unwrap_or(if protocol == 1 { LONG_FRAME_LEN } else { SHORT_FRAME_LEN });
+            (d.numbered_reports(), len)
+        }
+        Transport::Usbfs(c) => (false, c.transfer_len),
     };
+
     // Igual que el original (KeyBoardVersion_Check): si no nos fuerzan un report id,
-    // probamos 3 -> 0 -> 2 y nos quedamos con el primero que acepte la escritura.
+    // probamos 3 -> 0 -> 2 (el descriptor de la interfaz de configuración declara el 3).
     let report_id = match da.report_id {
         Some(r) => r,
-        None if da.dry_run => 3,
-        None => {
-            let mut chosen = 3u8;
-            for rid in [3u8, 0, 2] {
-                let zeros = [0u8; 8];
-                let len = out_len_for(rid);
-                if dev
-                    .write_report(numbered, rid, &zeros, len)
-                    .map(|n| n > 0)
-                    .unwrap_or(false)
-                {
-                    chosen = rid;
-                    break;
-                }
-            }
-            chosen
-        }
+        None => 3,
     };
-    let out_len = out_len_for(report_id);
+
     Ok(Target {
-        dev,
+        transport,
+        pid: pid.unwrap_or(0),
         protocol,
         new_mul_mouse: nmm,
         report_id,
@@ -214,7 +278,7 @@ fn target(da: &DeviceArgs, need_device: bool) -> Result<Target, String> {
 }
 
 impl Target {
-    fn send(&self, data: &[u8], dry_run: bool, label: &str) -> Result<(), String> {
+    fn send(&mut self, data: &[u8], dry_run: bool, label: &str) -> Result<(), String> {
         let shown: Vec<String> = data.iter().take(24).map(|b| format!("{b:02x}")).collect();
         if dry_run {
             println!(
@@ -225,10 +289,22 @@ impl Target {
             );
             return Ok(());
         }
-        match self
-            .dev
-            .write_report(self.numbered, self.report_id, data, self.out_len)
-        {
+        let res = match &mut self.transport {
+            Transport::Hidraw(dev) => {
+                dev.write_report(self.numbered, self.report_id, data, self.out_len)
+            }
+            Transport::Usbfs(cfg) => {
+                if !cfg.is_open() {
+                    cfg.open()
+                        .map_err(|e| format!("no puedo abrir/reclamar {}: {e}", cfg.path.display()))?;
+                }
+                let mut payload = Vec::with_capacity(data.len() + 1);
+                payload.push(self.report_id);
+                payload.extend_from_slice(data);
+                cfg.write(&payload)
+            }
+        };
+        match res {
             Ok(n) => {
                 println!("{label}: {n} bytes escritos");
                 Ok(())
@@ -237,17 +313,17 @@ impl Target {
         }
     }
 
-    fn commit_keys(&self, dry_run: bool) -> Result<(), String> {
+    fn commit_keys(&mut self, dry_run: bool) -> Result<(), String> {
         self.send(&CMD_WRITE_FLASH, dry_run, "grabar (AA AA)")
     }
 
-    fn commit_led(&self, dry_run: bool) -> Result<(), String> {
+    fn commit_led(&mut self, dry_run: bool) -> Result<(), String> {
         self.send(&CMD_WRITE_LED, dry_run, "grabar LED (AA A1)")
     }
 
     /// Escribe una tecla y, si el protocolo lo requiere, confirma la grabación.
     fn set_key(
-        &self,
+        &mut self,
         index: u8,
         layer: u8,
         key_type: u8,
@@ -257,7 +333,8 @@ impl Target {
     ) -> Result<(), String> {
         println!(
             "tecla {index} ({}), capa {layer}, tipo {key_type}, protocolo {}",
-            self.dev.node, self.protocol
+            self.where_(),
+            self.protocol
         );
         if self.protocol == 1 {
             let f = long_frame(
@@ -295,11 +372,7 @@ impl Target {
 
 fn cmd_list() -> Result<(), String> {
     let devs = Device::discover(VID_OEM).map_err(|e| e.to_string())?;
-    if devs.is_empty() {
-        println!("Sin dispositivos VID 0x{VID_OEM:04x} conectados.");
-        println!("Conecta el teclado macro (y comprueba `lsusb | grep -i 1189`).");
-        return Ok(());
-    }
+    let mut found = !devs.is_empty();
     for d in devs {
         let kp = hidraw::known_pid(d.pid);
         println!(
@@ -319,68 +392,104 @@ fn cmd_list() -> Result<(), String> {
             println!("    fabricante={:?} serial={:?}", d.manufacturer, d.serial);
         }
     }
+    // Interfaz de configuración por USB directo (no aparece como /dev/hidraw).
+    for k in hidraw::KNOWN_PIDS {
+        let iface = if k.1 == 0 { 1 } else { 0 };
+        if let Some(c) = UsbfsConfig::find(VID_OEM, k.0, iface) {
+            found = true;
+            println!(
+                "{}  {:04x}:{:04x}  interfaz de configuración={} (EP 0x{:02x}, \
+                 transferencias de {} B)  protocolo={}  [transporte usbfs]",
+                c.path.display(),
+                VID_OEM,
+                k.0,
+                c.interface,
+                c.endpoint,
+                c.transfer_len,
+                k.1
+            );
+        }
+    }
+    if !found {
+        println!("Sin dispositivos VID 0x{VID_OEM:04x} conectados.");
+        println!("Conecta el teclado macro (y comprueba `lsusb | grep -i 1189`).");
+    }
     Ok(())
 }
 
 fn cmd_info(da: DeviceArgs) -> Result<(), String> {
     let t = target(&da, false)?;
+    println!("transporte: {}   destino: {}", t.kind(), t.where_());
     println!(
-        "{}  {:04x}:{:04x}  interfaz={:?}  protocolo={}  new_mul_mouse={}",
-        t.dev.path.display(),
-        t.dev.vid,
-        t.dev.pid,
-        t.dev.interface,
-        t.protocol,
-        t.new_mul_mouse
+        "VID:PID {:04x}:{:04x}  protocolo={}  new_mul_mouse={}  report id={}",
+        VID_OEM, t.pid, t.protocol, t.new_mul_mouse, t.report_id
     );
-    println!("informes numerados: {}", t.numbered);
-    let reps = t.dev.reports();
-    let infos: Vec<hidraw::ReportInfo> = reps
-        .iter()
-        .map(|((kind, id), bytes)| hidraw::ReportInfo {
-            kind: *kind,
-            id: *id,
-            bytes: *bytes,
-        })
-        .collect();
-    for r in &infos {
-        println!("  {:?} id={} {} bytes de datos", r.kind, r.id, r.bytes);
+    match &t.transport {
+        Transport::Hidraw(d) => {
+            println!("interfaz USB {:?}  informes numerados: {}", d.interface, t.numbered);
+            for ((kind, id), bytes) in d.reports() {
+                println!("  {:?} id={} {} bytes de datos", kind, id, bytes);
+            }
+            let desc = d.report_descriptor();
+            let hex: Vec<String> = desc.iter().take(48).map(|b| format!("{b:02x}")).collect();
+            println!("descriptor: {} ... ({} bytes)", hex.join(" "), desc.len());
+        }
+        Transport::Usbfs(c) => {
+            println!(
+                "canal de configuración: interfaz {} (HID vendor-defined, Report ID 3), \
+                 EP 0x{:02x} de interrupción, transferencias de {} B = [id]+datos",
+                c.interface, c.endpoint, c.transfer_len
+            );
+            println!("(esta interfaz no tiene endpoint de entrada, así que el núcleo no la \
+                      expone como /dev/hidraw: por eso se escribe por USB directo)");
+        }
     }
-    let d = t.dev.report_descriptor();
-    let hex: Vec<String> = d.iter().take(48).map(|b| format!("{b:02x}")).collect();
-    println!("descriptor: {} ... ({} bytes)", hex.join(" "), d.len());
     Ok(())
 }
 
 fn cmd_probe(da: DeviceArgs) -> Result<(), String> {
-    let t = target(&da, false)?;
+    let mut t = target(&da, false)?;
     println!(
-        "{}  {:04x}:{:04x}  informes numerados: {}",
-        t.dev.path.display(),
-        t.dev.vid,
-        t.dev.pid,
-        t.numbered
+        "{}: {:04x}:{:04x}  transporte={}  protocolo={}",
+        t.where_(),
+        VID_OEM,
+        t.pid,
+        t.kind(),
+        t.protocol
     );
+    if t.kind() == "usbfs" {
+        println!("el descriptor de la interfaz de configuración declara Report ID 3");
+        t.send(&[0u8; 8], da.dry_run, "sondeo (trama de ceros)")?;
+        return Ok(());
+    }
     let mut ok = Vec::new();
-    let reps = t.dev.reports();
+    let reps = match &t.transport {
+        Transport::Hidraw(d) => d.reports(),
+        Transport::Usbfs(_) => Default::default(),
+    };
     for rid in [3u8, 0, 2] {
-        let zeros = [0u8; 8];
         let out_len = reps
             .get(&(ReportKind::Output, rid))
             .or_else(|| reps.get(&(ReportKind::Output, 0)))
             .copied()
             .unwrap_or(8);
-        if da.dry_run {
-            println!("[dry-run] sondear id={rid} ({} bytes)", out_len);
-            continue;
-        }
-        match t.dev.write_report(t.numbered, rid, &zeros, out_len) {
-            Ok(n) if n > 0 => {
-                println!("  report id {rid}: ACEPTADO ({n} bytes)");
-                ok.push(rid);
+        let zeros = [0u8; 8];
+        match &mut t.transport {
+            Transport::Hidraw(dev) => {
+                if da.dry_run {
+                    println!("[dry-run] sondear id={rid} ({out_len} bytes)");
+                    continue;
+                }
+                match dev.write_report(t.numbered, rid, &zeros, out_len) {
+                    Ok(n) if n > 0 => {
+                        println!("  report id {rid}: ACEPTADO ({n} bytes)");
+                        ok.push(rid);
+                    }
+                    Ok(_) => println!("  report id {rid}: rechazado"),
+                    Err(e) => println!("  report id {rid}: error {e}"),
+                }
             }
-            Ok(_) => println!("  report id {rid}: rechazado"),
-            Err(e) => println!("  report id {rid}: error {e}"),
+            Transport::Usbfs(_) => {}
         }
     }
     if !ok.is_empty() {
@@ -390,7 +499,7 @@ fn cmd_probe(da: DeviceArgs) -> Result<(), String> {
 }
 
 fn cmd_key(a: KeyArgs) -> Result<(), String> {
-    let t = target(&a.dev, true)?;
+    let mut t = target(&a.dev, true)?;
     let index = key_index(&a.key, t.new_mul_mouse)
         .ok_or_else(|| format!("índice de tecla desconocido: {}", a.key))?;
 
@@ -420,7 +529,7 @@ fn cmd_key(a: KeyArgs) -> Result<(), String> {
 }
 
 fn cmd_led(a: LedArgs) -> Result<(), String> {
-    let t = target(&a.dev, true)?;
+    let mut t = target(&a.dev, true)?;
     let color = led_color(&a.color).ok_or_else(|| format!("color desconocido: {}", a.color))?;
     if t.protocol == 1 {
         let f = led_long_frame(a.layer, color, a.mode);
@@ -445,12 +554,12 @@ fn cmd_led(a: LedArgs) -> Result<(), String> {
 }
 
 fn cmd_commit(da: DeviceArgs) -> Result<(), String> {
-    let t = target(&da, true)?;
+    let mut t = target(&da, true)?;
     t.commit_keys(da.dry_run)
 }
 
 fn cmd_apply(a: ApplyArgs) -> Result<(), String> {
-    let t = target(&a.dev, true)?;
+    let mut t = target(&a.dev, true)?;
     let text = std::fs::read_to_string(&a.profile)
         .map_err(|e| format!("no puedo leer {}: {e}", a.profile))?;
     let profile = parse_profile(&text).map_err(|e| format!("perfil inválido: {e}"))?;
@@ -479,7 +588,7 @@ fn cmd_apply(a: ApplyArgs) -> Result<(), String> {
 }
 
 fn cmd_raw(a: RawArgs) -> Result<(), String> {
-    let t = target(&a.dev, true)?;
+    let mut t = target(&a.dev, true)?;
     let data: Result<Vec<u8>, _> = a
         .bytes
         .split([' ', ','])

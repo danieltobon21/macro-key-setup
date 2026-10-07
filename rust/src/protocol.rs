@@ -328,13 +328,10 @@ pub fn short_frames(
                 d[4] = buf[4];
                 d[5] = 0;
             }
-            1 => {
-                d[4] = buf[4];
-                d[5] = buf[5];
-            }
+            // caso n>=1: buf[2n+2], buf[2n+3]
             n => {
-                d[4] = buf[2 * n];
-                d[5] = buf[2 * n + 1];
+                d[4] = buf[2 * n + 2];
+                d[5] = buf[2 * n + 3];
             }
         }
         out.push(d);

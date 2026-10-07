@@ -1,0 +1,52 @@
+# Configuración de Daniel para el teclado macro de 6 teclas + perilla.
+# Aplicar:  sudo python3 proto/macrokey.py apply --profile profiles/tinkercad.toml
+#           (o, cuando la app Rust tenga el transporte usbfs:
+#            sudo ./rust/target/release/macrokey apply --profile profiles/tinkercad.toml)
+#
+# Índices: 1..6 = teclas; knob-left / knob-push / knob-right = perilla
+#          (internamente 13/14/15 en este modelo).
+
+name = "tinkercad-y-productividad"
+
+# ------- hileras de teclas -------
+
+[[binding]]
+key = "1"
+codes = ["C"]
+mods = ["ctrl"]          # copiar
+
+[[binding]]
+key = "2"
+codes = ["V"]
+mods = ["ctrl"]          # pegar
+
+[[binding]]
+key = "3"
+codes = ["X"]
+mods = ["ctrl"]          # cortar
+
+[[binding]]
+key = "4"
+codes = ["ESC"]          # escape (primera tecla de la segunda hilera)
+
+[[binding]]
+key = "5"
+mouse = "middle"         # Tinkercad: pan (arrastrar con el botón central)
+
+[[binding]]
+key = "6"
+mouse = "right"          # Tinkercad: rotar (arrastrar con el botón derecho)
+
+# ------- perilla -------
+
+[[binding]]
+key = "knob-left"
+media = "voldown"        # girar a la izquierda: bajar volumen
+
+[[binding]]
+key = "knob-push"
+media = "play"           # pulsar: play/pausa
+
+[[binding]]
+key = "knob-right"
+media = "volup"          # girar a la derecha: subir volumen

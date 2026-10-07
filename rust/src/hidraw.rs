@@ -34,15 +34,6 @@ pub enum ReportKind {
     Feature,
 }
 
-/// Un informe declarado en el descriptor HID. (Se usa desde el CLI para imprimir.)
-#[derive(Debug, Clone, Copy)]
-pub struct ReportInfo {
-    pub kind: ReportKind,
-    pub id: u8,
-    /// bytes de datos (sin contar el byte de report id)
-    pub bytes: usize,
-}
-
 #[derive(Debug, Clone)]
 pub struct Device {
     pub node: String,       // "hidraw3"

@@ -25,7 +25,35 @@ En Linux: `mi_00` / `mi_01` es la **interfaz USB** del dispositivo compuesto
 (`/sys/class/hidraw/hidrawN/device/uevent` → `HID_PHYS=.../inputM`, y
 `../<usb-iface>/bInterfaceNumber`).
 
-### Dos "protocolos" según el modelo
+### 1.1 El caso del `0x8890` (el teclado del taller, verificado en hardware)
+
+Es un compuesto de **4 interfaces**:
+
+| interfaz | qué es | ¿`/dev/hidraw`? |
+|---|---|---|
+| 0 | teclado (boot) | sí (`hidraw7`) |
+| **1** | **canal de configuración** | **NO** |
+| 2 | teclado (HID 1.00) | sí (`hidraw8`) |
+| 3 | ratón | sí (`hidraw9`) |
+
+La interfaz 1 declara `Usage Page 0xFF00` (vendor-defined), **Report ID 3**, un
+informe de salida de **64 bytes** y **solo un endpoint OUT** (`EP 0x02`,
+interrupción, 64 B). Al no tener endpoint de **entrada**, el `usbhid` de Linux se
+niega a enlazarla (`usbhid: couldn't find an input interrupt endpoint`) y **no
+se crea nodo `/dev/hidraw`**: hay que escribir por USB directo
+(`/dev/bus/usb/BBB/DDD`), reclamando la interfaz y enviando URBs de interrupción.
+
+- Transferencia en el cable: **65 bytes = `[report id]` + 64 de datos**
+  (los 8 primeros bytes de datos son la trama del protocolo 0; el resto, ceros).
+- Windows sí puede: el driver HID acepta la interfaz y `WriteFile` envía ese
+  buffer; por eso la app del fabricante funciona con `HidLibrary`.
+- Report ID: **3** — exactamente lo que declara el descriptor, y por eso
+  `KeyBoardVersion_Check` lo prueba primero.
+
+Esto explica de una vez el `mi_01` del código del fabricante y el `byte[8]` de
+`WriteDevice` (protocolo 0).
+
+### 1.2 Dos "protocolos" según el modelo
 
 | `Sd_Protocol_Type` | modelos | tamaño de datos que usa la app | formato de trama para escribir una tecla |
 |---|---|---|---|

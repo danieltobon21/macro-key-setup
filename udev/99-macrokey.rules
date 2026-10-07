@@ -5,4 +5,9 @@
 # TAG+="uaccess" da acceso al usuario con sesión activa (systemd-logind), sin
 # depender de grupos. Si prefieres grupos, cambia MODE/GROUP por el tuyo
 # (en Fedora el grupo de acceso a dispositivos serie/USB suele ser "uucp").
+#
+# Hacen falta DOS reglas: el canal de configuración de estos aparatos NO aparece
+# como /dev/hidraw (su interfaz no tiene endpoint de entrada), así que hay que
+# escribir por USB directo (/dev/bus/usb/BBB/DDD).
 SUBSYSTEM=="hidraw", ATTRS{idVendor}=="1189", MODE="0660", GROUP="plugdev", TAG+="uaccess"
+SUBSYSTEM=="usb", ATTR{idVendor}=="1189", MODE="0660", GROUP="plugdev", TAG+="uaccess"
