@@ -7,6 +7,7 @@
 mod gui;
 mod hidraw;
 mod protocol;
+mod textos;
 #[cfg(unix)]
 mod usbfs;
 #[cfg(windows)]
@@ -37,6 +38,12 @@ struct GuiArgsCli {
     /// perfil TOML que se carga al abrir la ventana
     #[arg(long)]
     profile: Option<String>,
+    /// arranca con la guía rápida abierta
+    #[arg(long)]
+    ayuda: bool,
+    /// arranca con la ventana "acerca de" abierta
+    #[arg(long)]
+    acerca: bool,
     #[command(flatten)]
     dev: DeviceArgs,
 }
@@ -689,6 +696,8 @@ fn main() -> ExitCode {
             #[cfg(windows)]
             winhid::ocultar_consola();
             gui::run(gui::GuiArgs {
+                abrir_ayuda: false,
+                abrir_acerca: false,
                 profile: None,
                 dev: DeviceArgs {
                     device: None,
@@ -703,6 +712,8 @@ fn main() -> ExitCode {
             #[cfg(windows)]
             winhid::ocultar_consola();
             gui::run(gui::GuiArgs {
+                abrir_ayuda: a.ayuda,
+                abrir_acerca: a.acerca,
                 profile: a.profile,
                 dev: a.dev,
             })
