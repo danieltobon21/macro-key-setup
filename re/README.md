@@ -3,6 +3,19 @@
 Aquí está **lo que sí se publica**: las herramientas y las tablas de datos que
 extraje del software del fabricante (`MINI KeyBoard.exe`, namespace `HIDTester`).
 
+## Sondas de la investigación (`re/tools/`)
+
+| fichero | para qué |
+|---|---|
+| `extract_tables.py` | regenera `tables/` desde el código C# decompilado |
+| `experimento-1.py`, `experimento-2.py` | planes de escritura en la flash para **medir** el protocolo: cómo se localizaron los campos de la trama corta, el mapa del ratón y la dirección de la perilla |
+| `probar-control.py` | sonda de lectura por el *pipe* de control (EP0): demostró que el canal de configuración responde siempre un byte fijo `0xAA` |
+| `probar-lectura.py` | comprobación en las interfaces con endpoint de entrada: devuelven `EBUSY` (las tiene el driver) |
+
+Los dos experimentos **escriben** en la flash, así que hay que ejecutarlos sabiendo
+qué configuración queda puesta (`macrokey apply profiles/tinkercad.toml` la
+restaura).
+
 | ruta | qué es |
 |---|---|
 | `tools/extract_tables.py` | extractor que lee el C# decompilado y genera las tablas de códigos |

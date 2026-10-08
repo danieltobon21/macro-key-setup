@@ -1,0 +1,68 @@
+# Example profile for the 6-key + knob macro keyboard.
+#
+# Apply it with:
+#     macrokey apply profiles/example.toml
+#     macrokey apply profiles/example.toml --dry-run    # print the frames only
+#
+# Key names: 1..6 are the keys; the knob is knob-left / knob-push / knob-right.
+#
+# Every binding takes exactly ONE of these forms:
+#     codes = ["A"]  +  mods = ["ctrl"]    keyboard combination
+#     media = "play"                       media key
+#     mouse = "wheelup"                    mouse action
+#     clear = true                         leave the key with no function
+#
+# Several codes make a sequence, played with `delay_ms` between elements.
+
+name = "example"
+
+# LED of the keyboard (a single entry for the whole device; only units that
+# actually have an LED soldered will show anything)
+[led]
+layer = 1
+mode = 2          # 0..5
+color = "orange"  # red, green, blue, yellow, purple, cyan, white, orange
+
+# ------- keys -------
+
+[[binding]]
+key = "1"
+codes = ["C"]
+mods = ["ctrl"]           # copy
+
+[[binding]]
+key = "2"
+codes = ["V"]
+mods = ["ctrl"]           # paste
+
+[[binding]]
+key = "3"
+codes = ["F5"]
+mods = ["shift"]          # a shortcut with several modifiers
+
+[[binding]]
+key = "4"
+media = "mute"
+
+[[binding]]
+key = "5"
+mouse = "wheelup"         # wheel: one detent per press
+
+[[binding]]
+key = "6"
+codes = ["H", "O", "L", "A"]   # a sequence, typed one key after another
+delay_ms = 30
+
+# ------- knob -------
+
+[[binding]]
+key = "knob-left"
+media = "prev"
+
+[[binding]]
+key = "knob-push"
+media = "play"
+
+[[binding]]
+key = "knob-right"
+media = "next"

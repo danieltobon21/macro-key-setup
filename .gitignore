@@ -15,3 +15,5 @@ vendor/
 # código C# decompilado del binario del fabricante (obra derivada)
 re/decompiled/
 re/hidlibrary/
+
+# las capturas del README sí se publican (docs/img/)

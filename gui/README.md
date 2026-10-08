@@ -20,16 +20,20 @@ de marca, no con estos.
 | `mockup.html` | vista previa de la interfaz, con el aparato dibujado **a escala real** (1 mm = 6 px): 100 × 60 mm, teclas de 18 × 17 mm, perilla ⌀ 20 mm |
 | `hacer-icono.py` | genera `icono-macrokey.ico` con el lenguaje visual de la familia Tobon (squircle plano, contorno claro grueso, un único acento naranja), partiendo de `tightvnc/tools/make-appicon.py` |
 | `icono-macrokey.ico` | icono del ejecutable: 7 tamaños (256, 128, 64, 48, 32, 24, 16) |
-| `vistas/` | renders de referencia: variantes del icono, tira de tamaños con los píxeles a la vista, el icono sobre fondo claro y oscuro, y la interfaz |
+| (capturas) | las capturas de la aplicación viven en `docs/img/`, las usa el README |
 
-Regenerar:
+Regenerar el icono:
 
 ```bash
-python3 gui/hacer-icono.py --variante V2      # icono (necesita Pillow)
-# render del mockup, para revisarlo antes de enseñarlo
-chromium-browser --headless=new --disable-gpu --no-sandbox --hide-scrollbars \
-  --screenshot=gui/vistas/interfaz-previa.png --window-size=1080,800 \
-  file://$PWD/gui/mockup-render.html
+python3 gui/hacer-icono.py --variante V2      # necesita Pillow
+```
+
+Y las capturas de la app, sin pantalla (útil en un servidor):
+
+```bash
+LIBGL_ALWAYS_SOFTWARE=1 xvfb-run -a --server-args="-screen 0 1400x900x24" \
+  bash -c './rust/target/release/macrokey gui & APP=$!; sleep 13; \
+           import -window root docs/img/app-es.png; kill $APP'
 ```
 
 Detalles que costaron:
